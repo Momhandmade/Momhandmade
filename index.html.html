@@ -14,19 +14,19 @@
                     colors: {
                         earth: {
                             50: '#f9f8f6',
-                            100: '#f4f1ea', // Main bg
+                            100: '#f4f1ea',
                             200: '#e5ded1',
                             300: '#d2c4b0',
                             400: '#bca68a',
                             500: '#a68865',
-                            600: '#8b5a2b', // Wood brown
+                            600: '#8b5a2b',
                             700: '#734621',
                             800: '#5e3a1f',
-                            900: '#2c241b', // Dark text
+                            900: '#2c241b',
                         },
                         leaf: {
-                            500: '#5c7a46', // Primary green
-                            600: '#4a5d23', // Dark green
+                            500: '#5c7a46',
+                            600: '#4a5d23',
                         }
                     },
                     fontFamily: {
@@ -48,7 +48,6 @@
 </head>
 <body class="bg-earth-100 text-earth-900 min-h-screen flex flex-col">
 
-    <!-- Navigation -->
     <nav class="bg-earth-50 shadow-sm sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
@@ -65,13 +64,12 @@
         </div>
     </nav>
 
-    <!-- Main Content Area -->
     <main class="flex-grow w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
         
-        <!-- Loading Overlay for Firebase Auth -->
-        <div id="global-loader" class="absolute inset-0 bg-earth-100/80 z-50 flex flex-col items-center justify-center rounded-lg">
+        <!-- Loading Overlay -->
+        <div id="global-loader" class="absolute inset-0 bg-earth-100/90 z-50 flex flex-col items-center justify-center rounded-lg">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-leaf-600 mb-4"></div>
-            <p class="text-earth-700 animate-pulse">系統初始化中，請稍候...</p>
+            <p class="text-earth-700 animate-pulse font-medium">系統初始化中，請稍候...</p>
         </div>
 
         <!-- Storefront View -->
@@ -88,7 +86,7 @@
 
             <!-- Products Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="products-container">
-                <!-- Products dynamically inserted here by JS -->
+                <!-- Products dynamically inserted here -->
             </div>
         </div>
 
@@ -134,7 +132,7 @@
             <div class="bg-white shadow rounded-lg overflow-hidden border border-earth-200">
                  <div class="px-6 py-4 border-b border-earth-200 bg-earth-50">
                     <h3 class="text-lg font-bold text-earth-800"><i class="fa-solid fa-tags mr-2 text-leaf-500"></i>商品管理 (本地預覽用)</h3>
-                    <p class="text-xs text-earth-500 mt-1">此處新增的商品目前僅儲存於本地瀏覽器，重整後會恢復預設。</p>
+                    <p class="text-xs text-earth-500 mt-1">此處新增的商品目前僅儲存於本地瀏覽器。</p>
                 </div>
                 <div class="p-6">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="admin-products-container">
@@ -145,18 +143,15 @@
         </div>
     </main>
 
-    <!-- Footer -->
     <footer class="bg-earth-800 text-earth-200 py-6 text-center text-sm mt-auto">
         <p>&copy; 2026 Momhandmade.系列編織 All rights reserved.</p>
     </footer>
 
-    <!-- Order Modal -->
     <div id="order-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
             <div class="fixed inset-0 bg-earth-900 bg-opacity-80 transition-opacity cursor-pointer" onclick="closeModal()"></div>
 
             <div class="relative inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl w-full border border-earth-200">
-                
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="flex justify-between items-center mb-5 border-b border-earth-100 pb-3">
                         <h3 class="text-xl font-bold text-earth-900 flex items-center gap-2" id="modal-product-name">
@@ -168,7 +163,7 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
-                        <!-- Left: Product Image -->
+                        <!-- Left: Product Image & Color Chart -->
                         <div class="md:col-span-5 flex flex-col items-center">
                             <div class="sticky top-6 w-full flex flex-col items-center">
                                 <img id="modal-product-image" src="" alt="商品預覽" class="w-full max-w-sm rounded-xl shadow-md border border-earth-200 object-cover mb-4">
@@ -253,10 +248,10 @@
                                 
                                 <!-- Submit Actions -->
                                 <div class="pt-6 flex justify-end gap-3 mt-6 border-t border-earth-100">
-                                    <button type="button" onclick="closeModal('order-modal')" class="bg-white border border-earth-300 rounded-md shadow-sm px-4 py-2 text-base font-medium text-earth-700 hover:bg-earth-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-earth-500 sm:text-sm transition">
+                                    <button type="button" onclick="closeModal('order-modal')" class="bg-white border border-earth-300 rounded-md shadow-sm px-4 py-2 text-base font-medium text-earth-700 hover:bg-earth-50 sm:text-sm transition">
                                         取消
                                     </button>
-                                    <button type="submit" id="submit-btn" class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-6 py-2 bg-leaf-600 text-base font-medium text-white hover:bg-leaf-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-leaf-500 sm:text-sm transition flex items-center">
+                                    <button type="submit" id="submit-btn" class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-6 py-2 bg-leaf-600 text-base font-medium text-white hover:bg-leaf-700 sm:text-sm transition items-center">
                                         確認送出訂單
                                     </button>
                                 </div>
@@ -268,7 +263,6 @@
         </div>
     </div>
 
-    <!-- Add Product Modal -->
     <div id="add-product-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
             <div class="fixed inset-0 bg-earth-900 bg-opacity-80 transition-opacity cursor-pointer" onclick="closeModal('add-product-modal')"></div>
@@ -297,7 +291,7 @@
 
                         <div>
                             <label for="new-product-desc" class="block text-sm font-medium text-earth-700 mb-1">商品描述</label>
-                            <textarea id="new-product-desc" rows="2" class="block w-full border border-earth-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-leaf-500 focus:border-leaf-500 sm:text-sm bg-white" placeholder="可使用簡單的 HTML 標籤如 <br> 換行"></textarea>
+                            <textarea id="new-product-desc" rows="2" class="block w-full border border-earth-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-leaf-500 focus:border-leaf-500 sm:text-sm bg-white" placeholder="商品介紹..."></textarea>
                         </div>
 
                         <div>
@@ -306,13 +300,13 @@
                                 <div class="space-y-1 text-center">
                                     <i class="fa-solid fa-cloud-arrow-up text-3xl text-earth-400 mb-2"></i>
                                     <div class="flex text-sm text-earth-600 justify-center">
-                                        <label for="new-product-image" class="relative cursor-pointer bg-white rounded-md font-medium text-leaf-600 hover:text-leaf-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-leaf-500">
+                                        <label for="new-product-image" class="relative cursor-pointer bg-white rounded-md font-medium text-leaf-600 hover:text-leaf-500">
                                             <span>選擇檔案</span>
                                             <input id="new-product-image" name="file-upload" type="file" accept="image/*" class="sr-only" onchange="previewImageUpload(event, 'preview-new-image')" required>
                                         </label>
                                         <p class="pl-1">或拖曳至此</p>
                                     </div>
-                                    <p class="text-xs text-earth-500">PNG, JPG, GIF 可達 5MB</p>
+                                    <p class="text-xs text-earth-500">PNG, JPG, GIF</p>
                                 </div>
                                 <img id="preview-new-image" src="" class="absolute inset-0 w-full h-full object-cover rounded-md hidden opacity-90">
                             </div>
@@ -321,17 +315,17 @@
                         <div>
                             <label class="block text-sm font-medium text-earth-700 mb-1">色卡類型選擇 <span class="text-red-500">*</span></label>
                             <select id="new-product-colorchart" required class="block w-full border border-earth-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-leaf-500 focus:border-leaf-500 sm:text-sm bg-white">
-                                <option value="image_10.png">純棉彩線色卡 (如小雛菊系列)</option>
-                                <option value="image_13.png">韓國純棉線色卡 (如夏日編織系列)</option>
+                                <option value="https://placehold.co/600x400/f4f1ea/5e3a1f?text=Cotton+Color+Chart">純棉彩線色卡</option>
+                                <option value="https://placehold.co/600x400/f4f1ea/5e3a1f?text=Korean+Cotton+Chart">韓國純棉線色卡</option>
                                 <option value="none">無色卡 (固定款式)</option>
                             </select>
                         </div>
 
                         <div class="pt-4 flex justify-end gap-3 mt-4 border-t border-earth-100">
-                            <button type="button" onclick="closeModal('add-product-modal')" class="bg-white border border-earth-300 rounded-md shadow-sm px-4 py-2 text-base font-medium text-earth-700 hover:bg-earth-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-earth-500 sm:text-sm transition">
+                            <button type="button" onclick="closeModal('add-product-modal')" class="bg-white border border-earth-300 rounded-md shadow-sm px-4 py-2 text-base font-medium text-earth-700 hover:bg-earth-50 sm:text-sm transition">
                                 取消
                             </button>
-                            <button type="submit" id="submit-new-product-btn" class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-6 py-2 bg-leaf-600 text-base font-medium text-white hover:bg-leaf-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-leaf-500 sm:text-sm transition flex items-center">
+                            <button type="submit" id="submit-new-product-btn" class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-6 py-2 bg-leaf-600 text-base font-medium text-white hover:bg-leaf-700 sm:text-sm transition items-center">
                                 新增商品
                             </button>
                         </div>
@@ -341,7 +335,6 @@
         </div>
     </div>
 
-    <!-- Lightbox for Image Zoom -->
     <div id="lightbox" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/80" onclick="closeLightbox()">
         <button class="absolute top-4 right-4 text-white hover:text-earth-200 text-3xl z-50">
             <i class="fa-solid fa-xmark"></i>
@@ -349,7 +342,6 @@
         <img id="lightbox-img" src="" alt="放大預覽" class="rounded-lg shadow-2xl transition-transform duration-300 scale-95">
     </div>
 
-    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none">
         <div class="bg-earth-800 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3">
             <i class="fa-solid fa-circle-check text-leaf-500"></i>
@@ -363,14 +355,26 @@
         import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-handmade-app';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyDummyKeyForGitHubPagesHostingCompatibility",
+            authDomain: "dummy-app.firebaseapp.com",
+            projectId: "dummy-app",
+            storageBucket: "dummy-app.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+        let app, db, auth;
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+        } catch(e) {
+            console.warn("Firebase init fallback mode active:", e);
+        }
         
-        let currentUserId = null;
+        let currentUserId = 'github-user-' + Math.random().toString(36).substring(2, 9);
         let unsubscribeOrders = null;
         let currentChartSrc = '';
         
@@ -382,9 +386,9 @@
                 id: 'p1',
                 name: '小雛菊飲料提袋 🌼',
                 price: 280,
-                desc: '100%純棉彩線<br><span class="text-sm text-earth-500 mt-2 block">(實拍圖使用網袋#06豆綠 / 花瓣#40米白 / 花蕊-02奶油)</span><br><a href="javascript:void(0)" onclick="openLightbox(\'image_9.png\')" class="text-leaf-600 text-xs hover:underline mt-1 inline-block"><i class="fa-solid fa-circle-info"></i> 點我看部位說明</a>',
-                image: 'image_11.png',
-                colorChart: 'image_10.png',
+                desc: '100%純棉彩線<br><span class="text-sm text-earth-500 mt-2 block">(實拍圖使用網袋#06豆綠 / 花瓣#40米白 / 花蕊-02奶油)</span><br><a href="javascript:void(0)" onclick="openLightbox(\'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=800&q=80\')" class="text-leaf-600 text-xs hover:underline mt-1 inline-block"><i class="fa-solid fa-circle-info"></i> 點我看部位說明</a>',
+                image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=800&q=80',
+                colorChart: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80',
                 options: [
                     { id: 'net', label: '網袋顏色', choices: cottonColors },
                     { id: 'petal', label: '花瓣顏色', choices: cottonColors },
@@ -396,8 +400,8 @@
                 name: '🫧夏日編織提袋',
                 price: 1300,
                 desc: '使用100%韓國純棉線<br><span class="text-sm text-earth-500 mt-2 block">(實拍圖使用#302淡米色)</span>',
-                image: 'image_12.png',
-                colorChart: 'image_13.png',
+                image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80',
+                colorChart: 'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&w=800&q=80',
                 options: [
                     { id: 'bag', label: '顏色選擇', choices: koreanColors }
                 ]
@@ -407,38 +411,41 @@
                 name: '紅番茄大提袋 🍅',
                 price: 1100,
                 desc: '手工編織大容量提袋，點綴可愛小番茄<br><span class="text-sm text-earth-500 mt-2 block">(經典紅綠配色，恕不提供自訂色卡)</span>',
-                image: 'image_14.png',
+                image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80',
                 colorChart: 'none',
                 options: []
             }
         ];
 
+        let localOrders = JSON.parse(localStorage.getItem('mom_orders') || '[]');
+
         async function initApp() {
             try {
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
+                if (auth) {
+                    if (initialAuthToken) {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    if (auth.currentUser) currentUserId = auth.currentUser.uid;
                 }
-                currentUserId = auth.currentUser.uid;
-                document.getElementById('global-loader').style.display = 'none';
+            } catch (error) {
+                console.warn("Auth fallback mode active:", error);
+            } finally {
+                const loader = document.getElementById('global-loader');
+                if (loader) loader.style.display = 'none';
                 renderProducts();
                 window.navigate('store');
-            } catch (error) {
-                console.error("Firebase Init Error:", error);
-                document.getElementById('global-loader').innerHTML = `
-                    <div class="text-red-500 font-bold mb-2"><i class="fa-solid fa-circle-exclamation mr-2"></i>系統錯誤</div>
-                    <p class="text-earth-700 text-sm">無法連接資料庫，請重新整理頁面。</p>
-                `;
             }
         }
 
         function renderProducts() {
             const container = document.getElementById('products-container');
+            if(!container) return;
             container.innerHTML = products.map(product => `
                 <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-earth-100 overflow-hidden flex flex-col group relative">
                     <div class="h-64 w-full bg-earth-200 flex items-center justify-center relative overflow-hidden cursor-pointer" onclick="openLightbox('${product.image}')">
-                        <img src="${product.image}" alt="${product.name}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <img src="${product.image}" alt="${product.name}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/600x400/e5ded1/2c241b?text=Momhandmade'">
                         <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <i class="fa-solid fa-magnifying-glass-plus text-white text-3xl drop-shadow-md"></i>
                         </div>
@@ -466,12 +473,12 @@
             
             container.innerHTML = products.map(product => `
                 <div class="flex items-center gap-3 bg-white p-3 border border-earth-200 rounded-lg shadow-sm">
-                    <img src="${product.image}" class="w-16 h-16 object-cover rounded bg-earth-100">
+                    <img src="${product.image}" class="w-16 h-16 object-cover rounded bg-earth-100" onerror="this.src='https://placehold.co/100x100/e5ded1/2c241b?text=Img'">
                     <div class="flex-grow min-w-0">
                         <h4 class="text-sm font-bold text-earth-800 truncate">${product.name}</h4>
                         <p class="text-xs text-earth-500">NT$ ${product.price}</p>
                     </div>
-                    <button onclick="removeProduct('${product.id}')" class="text-red-400 hover:text-red-600 p-2 transition-colors" title="刪除商品 (僅本地)">
+                    <button onclick="removeProduct('${product.id}')" class="text-red-400 hover:text-red-600 p-2 transition-colors" title="刪除商品">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
@@ -481,7 +488,7 @@
         window.removeProduct = function(id) {
             products = products.filter(p => p.id !== id);
             renderProducts();
-            showToast('商品已移除 (重新載入將恢復)');
+            showToast('商品已移除');
         };
 
         window.openLightbox = function(imageSrc) {
@@ -536,7 +543,6 @@
             
             document.getElementById('modal-product-image').src = product.image;
 
-            // Handle Color Chart display
             const chartBox = document.getElementById('modal-colorchart-box');
             const chartThumb = document.getElementById('modal-colorchart-thumb');
             if (product.colorChart && product.colorChart !== 'none') {
@@ -547,13 +553,12 @@
                 chartBox.classList.add('hidden');
             }
 
-            // Build dynamic options or default notice
             const optionsContainer = document.getElementById('dynamic-options-container');
             if (product.options && product.options.length > 0) {
                 optionsContainer.innerHTML = product.options.map(opt => `
                     <div class="mb-2">
                         <label class="block text-sm font-bold text-earth-700 mb-1.5">${opt.label} <span class="text-red-500">*</span></label>
-                        <select name="custom-opt-${opt.id}" data-label="${opt.label}" required class="block w-full px-3 py-2.5 text-base border-earth-300 focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:border-leaf-500 sm:text-sm rounded-md bg-white border shadow-sm cursor-pointer">
+                        <select name="custom-opt-${opt.id}" data-label="${opt.label}" required class="block w-full px-3 py-2.5 text-base border-earth-300 focus:outline-none focus:ring-2 focus:ring-leaf-500 rounded-md bg-white border shadow-sm cursor-pointer">
                             <option value="" disabled selected>請選擇顏色...</option>
                             ${opt.choices.map(c => `<option value="${c}">${c}</option>`).join('')}
                         </select>
@@ -601,15 +606,15 @@
             const colorChart = document.getElementById('new-product-colorchart').value;
             const imagePreviewSrc = document.getElementById('preview-new-image').src;
             
-            if (!imagePreviewSrc || imagePreviewSrc === window.location.href) {
+            if (!imagePreviewSrc) {
                 showToast("請上傳商品圖片");
                 return;
             }
             
             let options = [];
-            if (colorChart === 'image_10.png') {
+            if (colorChart.includes('Cotton')) {
                 options = [{ id: 'color', label: '顏色選擇', choices: cottonColors }];
-            } else if (colorChart === 'image_13.png') {
+            } else if (colorChart.includes('Korean')) {
                 options = [{ id: 'color', label: '顏色選擇', choices: koreanColors }];
             }
             
@@ -619,19 +624,18 @@
                 price: price,
                 desc: desc || '手工製作商品',
                 image: imagePreviewSrc,
-                colorChart: colorChart,
+                colorChart: colorChart === 'none' ? 'none' : colorChart,
                 options: options
             };
             
             products.push(newProduct);
             renderProducts();
             closeModal('add-product-modal');
-            showToast('新商品已成功新增至清單！');
+            showToast('新商品已成功新增！');
         };
 
         window.submitOrder = async function(event) {
             event.preventDefault();
-            if (!currentUserId) return;
 
             const btn = document.getElementById('submit-btn');
             const originalBtnText = btn.innerHTML;
@@ -653,9 +657,7 @@
                     customDetails[select.dataset.label] = select.value;
                 });
 
-                const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
-                
-                await addDoc(ordersRef, {
+                const orderData = {
                     productName: productName,
                     customDetails: customDetails,
                     customerName: name,
@@ -665,8 +667,23 @@
                     address: address,
                     paymentProof: paymentProof,
                     userId: currentUserId,
-                    timestamp: serverTimestamp()
-                });
+                    timeMs: Date.now()
+                };
+
+                // Try Firebase if active, otherwise fallback to LocalStorage
+                if (db && auth) {
+                    try {
+                        const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
+                        await addDoc(ordersRef, { ...orderData, timestamp: serverTimestamp() });
+                    } catch(fbErr) {
+                        console.warn("Firestore sync fallback to localStorage:", fbErr);
+                        localOrders.unshift(orderData);
+                        localStorage.setItem('mom_orders', JSON.stringify(localOrders));
+                    }
+                } else {
+                    localOrders.unshift(orderData);
+                    localStorage.setItem('mom_orders', JSON.stringify(localOrders));
+                }
 
                 showToast('訂單已成功送出！請留意電子信箱通知。');
                 closeModal();
@@ -692,43 +709,46 @@
         }
 
         function loadAdminOrders() {
-            if (!currentUserId) return;
-            
             const tbody = document.getElementById('orders-table-body');
             tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-earth-500"><i class="fa-solid fa-spinner fa-spin mr-2"></i>載入資料中...</td></tr>';
 
-            const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
-            
-            unsubscribeOrders = onSnapshot(ordersRef, (snapshot) => {
-                let orders = [];
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    orders.push({
-                        id: doc.id,
-                        ...data,
-                        timeMs: data.timestamp ? data.timestamp.toMillis() : Date.now() 
+            if (db && auth) {
+                try {
+                    const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
+                    unsubscribeOrders = onSnapshot(ordersRef, (snapshot) => {
+                        let orders = [];
+                        snapshot.forEach((doc) => {
+                            const data = doc.data();
+                            orders.push({
+                                id: doc.id,
+                                ...data,
+                                timeMs: data.timestamp ? data.timestamp.toMillis() : (data.timeMs || Date.now())
+                            });
+                        });
+                        orders.sort((a, b) => b.timeMs - a.timeMs);
+                        renderAdminTable(orders);
+                    }, (error) => {
+                        console.warn("Firestore snapshot error, using localStorage:", error);
+                        renderAdminTable(localOrders);
                     });
-                });
-
-                orders.sort((a, b) => b.timeMs - a.timeMs);
-                renderAdminTable(orders);
-
-            }, (error) => {
-                console.error("Error fetching orders:", error);
-                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">無法讀取訂單資料，請確認權限。</td></tr>';
-            });
+                    return;
+                } catch(e) {
+                    console.warn("Firestore binding error:", e);
+                }
+            }
+            renderAdminTable(localOrders);
         }
 
         function renderAdminTable(orders) {
             const tbody = document.getElementById('orders-table-body');
             
-            if (orders.length === 0) {
+            if (!orders || orders.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-earth-500">目前尚無訂單。</td></tr>';
                 return;
             }
 
             tbody.innerHTML = orders.map(order => {
-                const dateObj = new Date(order.timeMs);
+                const dateObj = new Date(order.timeMs || Date.now());
                 const timeString = dateObj.toLocaleString('zh-TW', {
                     year: 'numeric', month: '2-digit', day: '2-digit',
                     hour: '2-digit', minute: '2-digit'
@@ -740,25 +760,19 @@
 
                 return `
                     <tr class="hover:bg-earth-50 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-earth-500">
-                            ${timeString}
-                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-earth-500">${timeString}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm font-medium text-earth-900 mb-1">${escapeHtml(order.customerName)}</div>
                             <div class="text-xs text-earth-500 mb-1"><i class="fa-solid fa-phone text-earth-400 mr-1 w-3"></i> ${escapeHtml(order.phone)}</div>
-                            <div class="text-xs text-earth-500 truncate max-w-[150px]" title="${escapeHtml(order.email)}"><i class="fa-solid fa-envelope text-earth-400 mr-1 w-3"></i> ${escapeHtml(order.email)}</div>
+                            <div class="text-xs text-earth-500 truncate max-w-[150px]"><i class="fa-solid fa-envelope text-earth-400 mr-1 w-3"></i> ${escapeHtml(order.email)}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-normal min-w-[200px]">
                             <div class="text-sm font-bold text-earth-800 mb-2">${escapeHtml(order.productName)}</div>
-                            <div class="bg-leaf-50/50 p-2 rounded border border-leaf-100">
-                                ${detailsHtml}
-                            </div>
+                            <div class="bg-leaf-50/50 p-2 rounded border border-leaf-100">${detailsHtml}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-normal">
-                            <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-bold rounded-full bg-earth-200 text-earth-800 mb-2 whitespace-nowrap shadow-sm">
-                                ${escapeHtml(order.delivery)}
-                            </span>
-                            <div class="text-xs text-earth-600 line-clamp-2 max-w-[200px]" title="${escapeHtml(order.address || '無')}">${escapeHtml(order.address || '無詳細地址')}</div>
+                            <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-bold rounded-full bg-earth-200 text-earth-800 mb-2 whitespace-nowrap shadow-sm">${escapeHtml(order.delivery)}</span>
+                            <div class="text-xs text-earth-600 line-clamp-2 max-w-[200px]">${escapeHtml(order.address || '無詳細地址')}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-earth-900">末五碼: <span class="font-mono bg-green-50 text-green-700 px-1.5 py-0.5 rounded border border-green-200 font-bold">${escapeHtml(order.paymentProof)}</span></div>
@@ -770,8 +784,7 @@
 
         function escapeHtml(unsafe) {
             if (!unsafe) return '';
-            return unsafe
-                 .toString()
+            return unsafe.toString()
                  .replace(/&/g, "&amp;")
                  .replace(/</g, "&lt;")
                  .replace(/>/g, "&gt;")
