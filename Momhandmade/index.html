@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Momhandmade.系列編織</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        earth: {
+                            50: '#f9f8f6',
+                            100: '#f4f1ea',
+                            200: '#e5ded1',
+                            300: '#d2c4b0',
+                            400: '#bca68a',
+                            500: '#a68865',
+                            600: '#8b5a2b',
+                            700: '#734621',
+                            800: '#5e3a1f',
+                            900: '#2c241b',
+                        },
+                        leaf: {
+                            500: '#5c7a46',
+                            600: '#4a5d23',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f4f1ea; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d2c4b0; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #a68865; }
+        #lightbox { backdrop-filter: blur(4px); }
+        #lightbox img { max-height: 90vh; max-width: 90vw; object-fit: contain; }
+    </style>
+</head>
+<body class="bg-earth-100 text-earth-900 min-h-screen flex flex-col">
+
+    <nav class="bg-earth-50 shadow-sm sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="navigate('store')">
+                    <i class="fa-solid fa-leaf text-leaf-500 text-2xl mr-2"></i>
+                    <span class="font-bold text-xl tracking-wider text-earth-800">Momhandmade.<span class="text-sm font-normal ml-2 text-earth-600">系列編織</span></span>
+                </div>
+                <div>
+                    <button id="admin-toggle-btn" onclick="toggleAdmin()" class="text-earth-600 hover:text-earth-900 transition-colors duration-200 text-sm font-medium px-3 py-2 rounded-md hover:bg-earth-200">
+                        <i class="fa-solid fa-lock mr-1"></i> 後台管理
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
+        
+        <!-- Loading Overlay -->
+        <div id="global-loader" class="absolute inset-0 bg-earth-100/90 z-50 flex flex-col items-center justify-center rounded-lg">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-leaf-600 mb-4"></div>
+            <p class="text-earth-700 animate-pulse font-medium">系統初始化中，請稍候...</p>
+        </div>
+
+        <!-- Storefront View -->
+        <div id="store-view" class="hidden">
+            <div class="text-center mb-12">
+                <h1 class="text-3xl md:text-4xl font-bold text-earth-800 mb-4">Momhandmade.系列編織</h1>
+                <p class="text-earth-700 max-w-2xl mx-auto mb-2 text-lg">來自60+媽咪的日常手作編織☘️</p>
+                <p class="text-earth-600 max-w-2xl mx-auto mb-4 leading-relaxed">
+                    如果您也喜歡手作的溫度，期待這份用雙手慢慢編織的心意，能剛好走進你的生活。✨<br>
+                    <span class="text-sm">（皆為100%手作，完美主義者請斟酌再下單！謝謝）</span>
+                </p>
+                <p class="text-red-500 font-medium text-sm max-w-2xl mx-auto">一人手作，皆按照下單付款成功順序製作出貨 ❗️恕不接急單🙇🏻‍♀️</p>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="products-container">
+                <!-- Products dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Admin Dashboard View -->
+        <div id="admin-view" class="hidden">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+                <h2 class="text-2xl font-bold text-earth-800">
+                    <i class="fa-solid fa-clipboard-list mr-2 text-leaf-500"></i>管理中心
+                </h2>
+                <div class="flex gap-2">
+                    <button onclick="openAddProductModal()" class="text-sm bg-leaf-600 hover:bg-leaf-700 text-white py-2 px-4 rounded transition flex items-center shadow-sm">
+                        <i class="fa-solid fa-plus mr-1"></i> 新增商品
+                    </button>
+                    <button onclick="navigate('store')" class="text-sm bg-earth-200 hover:bg-earth-300 text-earth-800 py-2 px-4 rounded transition flex items-center shadow-sm">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> 返回商店
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white shadow rounded-lg overflow-hidden border border-earth-200 mb-8">
+                <div class="px-6 py-4 border-b border-earth-200 bg-earth-50">
+                    <h3 class="text-lg font-bold text-earth-800"><i class="fa-solid fa-box-open mr-2 text-leaf-500"></i>訂單列表</h3>
+                </div>
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="min-w-full divide-y divide-earth-200">
+                        <thead class="bg-earth-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-earth-500 uppercase tracking-wider">訂購時間</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-earth-500 uppercase tracking-wider">顧客資訊</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-earth-500 uppercase tracking-wider">商品與款式</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-earth-500 uppercase tracking-wider">物流方式</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-earth-500 uppercase tracking-wider">付款確認</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body" class="bg-white divide-y divide-earth-100">
+                            <tr><td colspan="5" class="px-6 py-4 text-center text-earth-500">載入中...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Manage Products Section -->
+            <div class="bg-white shadow rounded-lg overflow-hidden border border-earth-200">
+                 <div class="px-6 py-4 border-b border-earth-200 bg-earth-50">
+                    <h3 class="text-lg font-bold text-earth-800"><i class="fa-solid fa-tags mr-2 text-leaf-500"></i>商品管理 (本地預覽用)</h3>
+                    <p class="text-xs text-earth-500 mt-1">此處新增的商品目前僅儲存於本地瀏覽器。</p>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="admin-products-container">
+                        <!-- Admin products injected here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-earth-800 text-earth-200 py-6 text-center text-sm mt-auto">
+        <p>&copy; 2026 Momhandmade.系列編織 All rights reserved.</p>
+    </footer>
+
+    <div id="order-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <div class="fixed inset-0 bg-earth-900 bg-opacity-80 transition-opacity cursor-pointer" onclick="closeModal()"></div>
+
+            <div class="relative inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl w-full border border-earth-200">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="flex justify-between items-center mb-5 border-b border-earth-100 pb-3">
+                        <h3 class="text-xl font-bold text-earth-900 flex items-center gap-2" id="modal-product-name">
+                            <i class="fa-solid fa-palette text-leaf-600"></i> 客製化商品
+                        </h3>
+                        <button onclick="closeModal()" class="text-earth-400 hover:text-earth-700 transition">
+                            <i class="fa-solid fa-xmark text-2xl"></i>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                        <!-- Left: Product Image & Color Chart -->
+                        <div class="md:col-span-5 flex flex-col items-center">
+                            <div class="sticky top-6 w-full flex flex-col items-center">
+                                <img id="modal-product-image" src="" alt="商品預覽" class="w-full max-w-sm rounded-xl shadow-md border border-earth-200 object-cover mb-4">
+                                <div id="modal-colorchart-box" class="w-full text-center hidden">
+                                    <p class="text-xs text-earth-600 mb-2 font-medium">💡 點擊下方色卡可放大檢視對照色號</p>
+                                    <img id="modal-colorchart-thumb" src="" alt="色卡預覽" class="w-full max-w-sm rounded-lg border border-earth-300 shadow-sm cursor-pointer hover:opacity-95 transition" onclick="openLightbox(currentChartSrc)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Order Form -->
+                        <div class="md:col-span-7">
+                            <form id="order-form" onsubmit="submitOrder(event)" class="space-y-5">
+                                <input type="hidden" id="form-product-id">
+                                <input type="hidden" id="form-product-title">
+                                
+                                <!-- Dynamic Options -->
+                                <div id="dynamic-options-container" class="space-y-4 p-4 bg-leaf-50/50 rounded-lg border border-leaf-100">
+                                    <!-- Populated by JS -->
+                                </div>
+
+                                <!-- Delivery Method -->
+                                <div class="pt-2">
+                                    <label class="block text-sm font-bold text-earth-800 mb-3">想要怎麼領取呢？ <span class="text-red-500">*</span></label>
+                                    <div class="space-y-3 bg-earth-50 p-4 rounded-lg border border-earth-200">
+                                        <label class="flex items-center cursor-pointer hover:bg-white p-2 rounded transition">
+                                            <input type="radio" name="delivery" value="秀傳自取" class="mr-3 w-4 h-4 text-leaf-600 focus:ring-leaf-500" required> 
+                                            <span class="text-earth-700">秀傳自取+$0</span>
+                                        </label>
+                                        <label class="flex items-center cursor-pointer hover:bg-white p-2 rounded transition">
+                                            <input type="radio" name="delivery" value="超商" class="mr-3 w-4 h-4 text-leaf-600 focus:ring-leaf-500"> 
+                                            <span class="text-earth-700">超商+$60 <span class="text-xs text-earth-500">(下面提供7-11門市)</span></span>
+                                        </label>
+                                        <label class="flex items-center cursor-pointer hover:bg-white p-2 rounded transition">
+                                            <input type="radio" name="delivery" value="宅配" class="mr-3 w-4 h-4 text-leaf-600 focus:ring-leaf-500"> 
+                                            <span class="text-earth-700">宅配+$100 <span class="text-xs text-earth-500">(下方提供地址)</span></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Customer Info -->
+                                <div class="space-y-4 pt-4 border-t border-earth-100">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="customer-name" class="block text-sm font-medium text-earth-700 mb-1">姓名 <span class="text-red-500">*</span></label>
+                                            <input type="text" id="customer-name" required class="block w-full border border-earth-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-leaf-500 focus:border-leaf-500 sm:text-sm bg-white">
+                                        </div>
+                                        <div>
+                                            <label for="customer-phone" class="block text-sm font-medium text-earth-700 mb-1">電話 <span class="text-red-500">*</span></label>
+                                            <input type="tel" id="customer-phone" required class="block w-full border border-earth-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-leaf-500 focus:border-leaf-500 sm:text-sm bg-white">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="customer-email" class="block text-sm font-medium text-earth-700 mb-1">電子信箱 <span class="text-red-500">*</span></label>
+                                        <p class="text-xs text-earth-500 mb-2">*電子信箱將作為後續訂購成功&出貨通知</p>
+                                        <input type="email" id="customer-email" required class="block w-full border border-earth-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-leaf-500 focus:border-leaf-500 sm:text-sm bg-white">
+                                    </div>
+                                    <div>
+                                        <label for="customer-address" class="block text-sm font-medium text-earth-700 mb-1">超商門市 / 宅配詳細地址</label>
+                                        <p class="text-xs text-earth-500 mb-2">(自取免填)</p>
+                                        <input type="text" id="customer-address" class="block w-full border border-earth-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-leaf-500 focus:border-leaf-500 sm:text-sm bg-white">
+                                    </div>
+                                </div>
+
+                                <!-- Payment Info -->
+                                <div class="pt-4 border-t border-earth-100">
+                                    <div class="bg-leaf-600 text-white p-4 rounded-t-md">
+                                        <p class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-money-bill-transfer"></i> 付款完成</p>
+                                    </div>
+                                    <div class="bg-earth-100 p-4 rounded-b-md mb-4 border border-t-0 border-earth-200">
+                                        <p class="text-base text-earth-800 mb-1">中國信託 <strong>882</strong></p>
+                                        <p class="text-base text-earth-800 mb-1">戶名：黃蓉姿</p>
+                                        <p class="text-base text-earth-800 font-mono text-lg mt-2 bg-white px-3 py-1 rounded inline-block shadow-sm">0000440540564802</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <label for="payment-proof" class="block text-sm font-bold text-earth-800 mb-1">匯款完成提供匯款後五碼 <span class="text-red-500">*</span></label>
+                                        <p class="text-xs text-earth-600 mb-2">(可接受未出貨前同寄件方式併單出貨)</p>
+                                        <input type="text" id="payment-proof" required class="block w-full border border-earth-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-leaf-500 focus:border-leaf-500 sm:text-sm bg-white" placeholder="例如: 12345">
+                                    </div>
+                                </div>
+                                
+                                <!-- Submit Actions -->
+                                <div class="pt-6 flex justify-end gap-3 mt-6 border-t border-earth-100">
+                                    <button type="button" onclick="closeModal('order-modal')" class="bg-white border border-earth-300 rounded-md shadow-sm px-4 py-2 text-base font-medium text-earth-700 hover:bg-earth-50 sm:text-sm transition">
+                                        取消
+                                    </button>
+                                    <button type="submit" id="submit-btn" class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-6 py-2 bg-leaf-600 text-base font-medium text-white hover:bg-leaf-700 sm:text-sm transition items-center">
+                                        確認送出訂單
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-product-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <div class="fixed inset-0 bg-earth-900 bg-opacity-80 transition-opacity cursor-pointer" onclick="closeModal('add-product-modal')"></div>
+
+            <div class="relative inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full border border-earth-200">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="flex justify-between items-center mb-5 border-b border-earth-100 pb-3">
+                        <h3 class="text-xl font-bold text-earth-900 flex items-center gap-2">
+                            <i class="fa-solid fa-plus text-leaf-600"></i> 新增商品
+                        </h3>
+                        <button onclick="closeModal('add-product-modal')" class="text-earth-400 hover:text-earth-700 transition">
+                            <i class="fa-solid fa-xmark text-2xl"></i>
+                        </button>
+                    </div>
+
+                    <form id="add-product-form" onsubmit="submitNewProduct(event)" class="space-y-4">
+                        <div>
+                            <label for="new-product-name" class="block text-sm font-medium text-earth-700 mb-1">商品名稱 <span class="text-red-500">*</span></label>
+                            <input type="text" id="new-product-name" required class="block w-full border border-earth-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-leaf-500 focus:border-leaf-500 sm:text-sm bg-white" placeholder="例如: 手工編織包">
+                        </div>
+                        
+                        <div>
+                            <label for="new-product-price" class="block text-sm font-medium text-earth-700 mb-1">價格 (NT$) <span class="text-red-500">*</span></label>
+                            <input type="number" id="new-product-price" required min="0" class="block w-full border border-earth-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-leaf-500 focus:border-leaf-500 sm:text-sm bg-white">
+                        </div>
+
+                        <div>
+                            <label for="new-product-desc" class="block text-sm font-medium text-earth-700 mb-1">商品描述</label>
+                            <textarea id="new-product-desc" rows="2" class="block w-full border border-earth-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-leaf-500 focus:border-leaf-500 sm:text-sm bg-white" placeholder="商品介紹..."></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-earth-700 mb-1">上傳商品圖片 <span class="text-red-500">*</span></label>
+                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-earth-300 border-dashed rounded-md relative hover:bg-earth-50 transition-colors">
+                                <div class="space-y-1 text-center">
+                                    <i class="fa-solid fa-cloud-arrow-up text-3xl text-earth-400 mb-2"></i>
+                                    <div class="flex text-sm text-earth-600 justify-center">
+                                        <label for="new-product-image" class="relative cursor-pointer bg-white rounded-md font-medium text-leaf-600 hover:text-leaf-500">
+                                            <span>選擇檔案</span>
+                                            <input id="new-product-image" name="file-upload" type="file" accept="image/*" class="sr-only" onchange="previewImageUpload(event, 'preview-new-image')" required>
+                                        </label>
+                                        <p class="pl-1">或拖曳至此</p>
+                                    </div>
+                                    <p class="text-xs text-earth-500">PNG, JPG, GIF</p>
+                                </div>
+                                <img id="preview-new-image" src="" class="absolute inset-0 w-full h-full object-cover rounded-md hidden opacity-90">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-earth-700 mb-1">色卡類型選擇 <span class="text-red-500">*</span></label>
+                            <select id="new-product-colorchart" required class="block w-full border border-earth-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-leaf-500 focus:border-leaf-500 sm:text-sm bg-white">
+                                <option value="https://placehold.co/600x400/f4f1ea/5e3a1f?text=Cotton+Color+Chart">純棉彩線色卡</option>
+                                <option value="https://placehold.co/600x400/f4f1ea/5e3a1f?text=Korean+Cotton+Chart">韓國純棉線色卡</option>
+                                <option value="none">無色卡 (固定款式)</option>
+                            </select>
+                        </div>
+
+                        <div class="pt-4 flex justify-end gap-3 mt-4 border-t border-earth-100">
+                            <button type="button" onclick="closeModal('add-product-modal')" class="bg-white border border-earth-300 rounded-md shadow-sm px-4 py-2 text-base font-medium text-earth-700 hover:bg-earth-50 sm:text-sm transition">
+                                取消
+                            </button>
+                            <button type="submit" id="submit-new-product-btn" class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-6 py-2 bg-leaf-600 text-base font-medium text-white hover:bg-leaf-700 sm:text-sm transition items-center">
+                                新增商品
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lightbox" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/80" onclick="closeLightbox()">
+        <button class="absolute top-4 right-4 text-white hover:text-earth-200 text-3xl z-50">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <img id="lightbox-img" src="" alt="放大預覽" class="rounded-lg shadow-2xl transition-transform duration-300 scale-95">
+    </div>
+
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none">
+        <div class="bg-earth-800 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3">
+            <i class="fa-solid fa-circle-check text-leaf-500"></i>
+            <span id="toast-message">操作成功</span>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-handmade-app';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyDummyKeyForGitHubPagesHostingCompatibility",
+            authDomain: "dummy-app.firebaseapp.com",
+            projectId: "dummy-app",
+            storageBucket: "dummy-app.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let app, db, auth;
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+        } catch(e) {
+            console.warn("Firebase init fallback mode active:", e);
+        }
+        
+        let currentUserId = 'github-user-' + Math.random().toString(36).substring(2, 9);
+        let unsubscribeOrders = null;
+        let currentChartSrc = '';
+        
+        const cottonColors = ['#40米白', '#08米色', '#02奶油', '#23杏桃', '#17灰棕', '#19咖啡', '#03薄荷', '#06豆綠', '#32松綠', '#33墨綠', '#35石墨', '#21深棕', '#09裸粉', '#10粉紅', '#12藕荷', '#13薰衣草', '#36鮭魚', '#38紅色', '#04天藍', '#26淺灰藍', '#30孔雀藍', '#34鋼青', '#28寶藍', '#39黑色'];
+        const koreanColors = ['#302淡米色', '#321淡黃色', '#303灰米色', '#311芥末黃', '#337鵝黃', '#307薄荷綠', '#317檸檬綠', '#325青色', '#328亮綠', '#338墨綠', '#326軍綠', '#341嬰兒藍', '#340藍寶石', '#319墨藍', '#346櫻花橘', '#322桃紅', '#343薰衣草', '#330亮橘', '#313黑色', '#320白色'];
+
+        let products = [
+            {
+                id: 'p1',
+                name: '小雛菊飲料提袋 🌼',
+                price: 280,
+                desc: '100%純棉彩線<br><span class="text-sm text-earth-500 mt-2 block">(實拍圖使用網袋#06豆綠 / 花瓣#40米白 / 花蕊-02奶油)</span><br><a href="javascript:void(0)" onclick="openLightbox(\'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=800&q=80\')" class="text-leaf-600 text-xs hover:underline mt-1 inline-block"><i class="fa-solid fa-circle-info"></i> 點我看部位說明</a>',
+                image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=800&q=80',
+                colorChart: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80',
+                options: [
+                    { id: 'net', label: '網袋顏色', choices: cottonColors },
+                    { id: 'petal', label: '花瓣顏色', choices: cottonColors },
+                    { id: 'pistil', label: '花蕊顏色', choices: cottonColors }
+                ]
+            },
+            {
+                id: 'p2',
+                name: '🫧夏日編織提袋',
+                price: 1300,
+                desc: '使用100%韓國純棉線<br><span class="text-sm text-earth-500 mt-2 block">(實拍圖使用#302淡米色)</span>',
+                image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80',
+                colorChart: 'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&w=800&q=80',
+                options: [
+                    { id: 'bag', label: '顏色選擇', choices: koreanColors }
+                ]
+            },
+            {
+                id: 'p3',
+                name: '紅番茄大提袋 🍅',
+                price: 1100,
+                desc: '手工編織大容量提袋，點綴可愛小番茄<br><span class="text-sm text-earth-500 mt-2 block">(經典紅綠配色，恕不提供自訂色卡)</span>',
+                image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80',
+                colorChart: 'none',
+                options: []
+            }
+        ];
+
+        let localOrders = JSON.parse(localStorage.getItem('mom_orders') || '[]');
+
+        async function initApp() {
+            try {
+                if (auth) {
+                    if (initialAuthToken) {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    if (auth.currentUser) currentUserId = auth.currentUser.uid;
+                }
+            } catch (error) {
+                console.warn("Auth fallback mode active:", error);
+            } finally {
+                const loader = document.getElementById('global-loader');
+                if (loader) loader.style.display = 'none';
+                renderProducts();
+                window.navigate('store');
+            }
+        }
+
+        function renderProducts() {
+            const container = document.getElementById('products-container');
+            if(!container) return;
+            container.innerHTML = products.map(product => `
+                <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-earth-100 overflow-hidden flex flex-col group relative">
+                    <div class="h-64 w-full bg-earth-200 flex items-center justify-center relative overflow-hidden cursor-pointer" onclick="openLightbox('${product.image}')">
+                        <img src="${product.image}" alt="${product.name}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/600x400/e5ded1/2c241b?text=Momhandmade'">
+                        <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <i class="fa-solid fa-magnifying-glass-plus text-white text-3xl drop-shadow-md"></i>
+                        </div>
+                        <div class="absolute bottom-3 right-3 bg-white/95 px-4 py-1.5 rounded-full text-sm font-bold text-earth-800 shadow-md z-10 backdrop-blur-sm">
+                            NT$ ${product.price}
+                        </div>
+                    </div>
+                    
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold text-earth-800 mb-2">${product.name}</h3>
+                        <p class="text-earth-600 text-sm mb-6 flex-grow leading-relaxed">${product.desc}</p>
+                        
+                        <button onclick="openOrderModal('${product.id}')" class="w-full bg-leaf-600 hover:bg-leaf-700 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-cart-shopping"></i> 立即填單訂購
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            renderAdminProducts();
+        }
+        
+        function renderAdminProducts() {
+            const container = document.getElementById('admin-products-container');
+            if(!container) return;
+            
+            container.innerHTML = products.map(product => `
+                <div class="flex items-center gap-3 bg-white p-3 border border-earth-200 rounded-lg shadow-sm">
+                    <img src="${product.image}" class="w-16 h-16 object-cover rounded bg-earth-100" onerror="this.src='https://placehold.co/100x100/e5ded1/2c241b?text=Img'">
+                    <div class="flex-grow min-w-0">
+                        <h4 class="text-sm font-bold text-earth-800 truncate">${product.name}</h4>
+                        <p class="text-xs text-earth-500">NT$ ${product.price}</p>
+                    </div>
+                    <button onclick="removeProduct('${product.id}')" class="text-red-400 hover:text-red-600 p-2 transition-colors" title="刪除商品">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        window.removeProduct = function(id) {
+            products = products.filter(p => p.id !== id);
+            renderProducts();
+            showToast('商品已移除');
+        };
+
+        window.openLightbox = function(imageSrc) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = imageSrc;
+            lightbox.classList.remove('hidden');
+            setTimeout(() => img.classList.replace('scale-95', 'scale-100'), 10);
+        };
+
+        window.closeLightbox = function() {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.classList.replace('scale-100', 'scale-95');
+            setTimeout(() => lightbox.classList.add('hidden'), 300);
+        };
+
+        window.navigate = function(view) {
+            document.getElementById('store-view').classList.add('hidden');
+            document.getElementById('admin-view').classList.add('hidden');
+            
+            if (view === 'store') {
+                document.getElementById('store-view').classList.remove('hidden');
+                document.getElementById('admin-toggle-btn').innerHTML = '<i class="fa-solid fa-lock mr-1"></i> 後台管理';
+                if(unsubscribeOrders) {
+                    unsubscribeOrders(); 
+                    unsubscribeOrders = null;
+                }
+            } else if (view === 'admin') {
+                document.getElementById('admin-view').classList.remove('hidden');
+                document.getElementById('admin-toggle-btn').innerHTML = '<i class="fa-solid fa-store mr-1"></i> 商店前台';
+                loadAdminOrders();
+            }
+        };
+
+        window.toggleAdmin = function() {
+            const adminView = document.getElementById('admin-view');
+            if (adminView.classList.contains('hidden')) {
+                window.navigate('admin');
+            } else {
+                window.navigate('store');
+            }
+        };
+
+        window.openOrderModal = function(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            document.getElementById('form-product-id').value = product.id;
+            document.getElementById('form-product-title').value = product.name;
+            document.getElementById('modal-product-name').innerHTML = `<i class="fa-solid fa-palette text-leaf-600"></i> 訂購：${product.name} <span class="text-sm font-normal text-earth-500 ml-2">(NT$${product.price})</span>`;
+            
+            document.getElementById('modal-product-image').src = product.image;
+
+            const chartBox = document.getElementById('modal-colorchart-box');
+            const chartThumb = document.getElementById('modal-colorchart-thumb');
+            if (product.colorChart && product.colorChart !== 'none') {
+                currentChartSrc = product.colorChart;
+                chartThumb.src = product.colorChart;
+                chartBox.classList.remove('hidden');
+            } else {
+                chartBox.classList.add('hidden');
+            }
+
+            const optionsContainer = document.getElementById('dynamic-options-container');
+            if (product.options && product.options.length > 0) {
+                optionsContainer.innerHTML = product.options.map(opt => `
+                    <div class="mb-2">
+                        <label class="block text-sm font-bold text-earth-700 mb-1.5">${opt.label} <span class="text-red-500">*</span></label>
+                        <select name="custom-opt-${opt.id}" data-label="${opt.label}" required class="block w-full px-3 py-2.5 text-base border-earth-300 focus:outline-none focus:ring-2 focus:ring-leaf-500 rounded-md bg-white border shadow-sm cursor-pointer">
+                            <option value="" disabled selected>請選擇顏色...</option>
+                            ${opt.choices.map(c => `<option value="${c}">${c}</option>`).join('')}
+                        </select>
+                    </div>
+                `).join('');
+            } else {
+                optionsContainer.innerHTML = `<p class="text-sm text-earth-600 text-center py-2"><i class="fa-solid fa-circle-check text-leaf-600 mr-1"></i> 此商品採經典配色製作，無需選擇色卡。</p>`;
+            }
+
+            document.getElementById('order-form').reset();
+            document.getElementById('order-modal').classList.remove('hidden');
+        };
+
+        window.closeModal = function(modalId = 'order-modal') {
+            document.getElementById(modalId).classList.add('hidden');
+        };
+        
+        window.openAddProductModal = function() {
+            document.getElementById('add-product-form').reset();
+            const preview = document.getElementById('preview-new-image');
+            preview.src = "";
+            preview.classList.add('hidden');
+            document.getElementById('add-product-modal').classList.remove('hidden');
+        };
+        
+        window.previewImageUpload = function(event, previewElementId) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById(previewElementId);
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        };
+        
+        window.submitNewProduct = function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('new-product-name').value;
+            const price = parseInt(document.getElementById('new-product-price').value);
+            const desc = document.getElementById('new-product-desc').value;
+            const colorChart = document.getElementById('new-product-colorchart').value;
+            const imagePreviewSrc = document.getElementById('preview-new-image').src;
+            
+            if (!imagePreviewSrc) {
+                showToast("請上傳商品圖片");
+                return;
+            }
+            
+            let options = [];
+            if (colorChart.includes('Cotton')) {
+                options = [{ id: 'color', label: '顏色選擇', choices: cottonColors }];
+            } else if (colorChart.includes('Korean')) {
+                options = [{ id: 'color', label: '顏色選擇', choices: koreanColors }];
+            }
+            
+            const newProduct = {
+                id: 'p' + Date.now(),
+                name: name,
+                price: price,
+                desc: desc || '手工製作商品',
+                image: imagePreviewSrc,
+                colorChart: colorChart === 'none' ? 'none' : colorChart,
+                options: options
+            };
+            
+            products.push(newProduct);
+            renderProducts();
+            closeModal('add-product-modal');
+            showToast('新商品已成功新增！');
+        };
+
+        window.submitOrder = async function(event) {
+            event.preventDefault();
+
+            const btn = document.getElementById('submit-btn');
+            const originalBtnText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> 處理中...';
+
+            try {
+                const productName = document.getElementById('form-product-title').value;
+                const name = document.getElementById('customer-name').value;
+                const phone = document.getElementById('customer-phone').value;
+                const email = document.getElementById('customer-email').value;
+                const delivery = document.querySelector('input[name="delivery"]:checked')?.value || '';
+                const address = document.getElementById('customer-address').value;
+                const paymentProof = document.getElementById('payment-proof').value;
+
+                let customDetails = {};
+                const selects = document.querySelectorAll('#dynamic-options-container select');
+                selects.forEach(select => {
+                    customDetails[select.dataset.label] = select.value;
+                });
+
+                const orderData = {
+                    productName: productName,
+                    customDetails: customDetails,
+                    customerName: name,
+                    phone: phone,
+                    email: email,
+                    delivery: delivery,
+                    address: address,
+                    paymentProof: paymentProof,
+                    userId: currentUserId,
+                    timeMs: Date.now()
+                };
+
+                // Try Firebase if active, otherwise fallback to LocalStorage
+                if (db && auth) {
+                    try {
+                        const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
+                        await addDoc(ordersRef, { ...orderData, timestamp: serverTimestamp() });
+                    } catch(fbErr) {
+                        console.warn("Firestore sync fallback to localStorage:", fbErr);
+                        localOrders.unshift(orderData);
+                        localStorage.setItem('mom_orders', JSON.stringify(localOrders));
+                    }
+                } else {
+                    localOrders.unshift(orderData);
+                    localStorage.setItem('mom_orders', JSON.stringify(localOrders));
+                }
+
+                showToast('訂單已成功送出！請留意電子信箱通知。');
+                closeModal();
+
+            } catch (error) {
+                console.error("Order submission failed:", error);
+                showToast('送出失敗，請稍後再試。');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalBtnText;
+            }
+        };
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function loadAdminOrders() {
+            const tbody = document.getElementById('orders-table-body');
+            tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-earth-500"><i class="fa-solid fa-spinner fa-spin mr-2"></i>載入資料中...</td></tr>';
+
+            if (db && auth) {
+                try {
+                    const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
+                    unsubscribeOrders = onSnapshot(ordersRef, (snapshot) => {
+                        let orders = [];
+                        snapshot.forEach((doc) => {
+                            const data = doc.data();
+                            orders.push({
+                                id: doc.id,
+                                ...data,
+                                timeMs: data.timestamp ? data.timestamp.toMillis() : (data.timeMs || Date.now())
+                            });
+                        });
+                        orders.sort((a, b) => b.timeMs - a.timeMs);
+                        renderAdminTable(orders);
+                    }, (error) => {
+                        console.warn("Firestore snapshot error, using localStorage:", error);
+                        renderAdminTable(localOrders);
+                    });
+                    return;
+                } catch(e) {
+                    console.warn("Firestore binding error:", e);
+                }
+            }
+            renderAdminTable(localOrders);
+        }
+
+        function renderAdminTable(orders) {
+            const tbody = document.getElementById('orders-table-body');
+            
+            if (!orders || orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-earth-500">目前尚無訂單。</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = orders.map(order => {
+                const dateObj = new Date(order.timeMs || Date.now());
+                const timeString = dateObj.toLocaleString('zh-TW', {
+                    year: 'numeric', month: '2-digit', day: '2-digit',
+                    hour: '2-digit', minute: '2-digit'
+                });
+
+                const detailsHtml = order.customDetails && Object.keys(order.customDetails).length > 0 ? 
+                    Object.entries(order.customDetails).map(([k,v]) => `<div class="text-xs text-earth-600 mt-1">${escapeHtml(k)}: <span class="font-bold text-leaf-700 bg-white px-1 rounded">${escapeHtml(v)}</span></div>`).join('') 
+                    : '<div class="text-xs text-earth-500">無特殊客製</div>';
+
+                return `
+                    <tr class="hover:bg-earth-50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-earth-500">${timeString}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-earth-900 mb-1">${escapeHtml(order.customerName)}</div>
+                            <div class="text-xs text-earth-500 mb-1"><i class="fa-solid fa-phone text-earth-400 mr-1 w-3"></i> ${escapeHtml(order.phone)}</div>
+                            <div class="text-xs text-earth-500 truncate max-w-[150px]"><i class="fa-solid fa-envelope text-earth-400 mr-1 w-3"></i> ${escapeHtml(order.email)}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-normal min-w-[200px]">
+                            <div class="text-sm font-bold text-earth-800 mb-2">${escapeHtml(order.productName)}</div>
+                            <div class="bg-leaf-50/50 p-2 rounded border border-leaf-100">${detailsHtml}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-normal">
+                            <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-bold rounded-full bg-earth-200 text-earth-800 mb-2 whitespace-nowrap shadow-sm">${escapeHtml(order.delivery)}</span>
+                            <div class="text-xs text-earth-600 line-clamp-2 max-w-[200px]">${escapeHtml(order.address || '無詳細地址')}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-earth-900">末五碼: <span class="font-mono bg-green-50 text-green-700 px-1.5 py-0.5 rounded border border-green-200 font-bold">${escapeHtml(order.paymentProof)}</span></div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe.toString()
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>
