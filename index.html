@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="zh-TW"><head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Momhandmade. 系列編織｜客製化選色與線上訂購</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- html2canvas (匯出高清色卡 PNG) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Serif TC', "PingFang TC", "Microsoft JhengHei", serif;
+      background-color: #F7F4EF;
+      color: #292524;
+      margin: 0;
+    }
+    .num-font {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .modal-hidden {
+      display: none !important;
+    }
+    .yarn-ball {
+      background-image: 
+        radial-gradient(circle at 30% 28%, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 50%),
+        radial-gradient(circle at 70% 75%, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0) 60%),
+        repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.08) 0px, rgba(0,0,0,0.08) 2px, transparent 4px);
+      box-shadow: 0 4px 10px -2px rgba(60, 45, 35, 0.18), inset 0 2px 4px rgba(255,255,255,0.5);
+    }
+    .yarn-swatch {
+      background-image: 
+        linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(0,0,0,0.2) 100%),
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.09) 0px, rgba(255,255,255,0.09) 3px, rgba(0,0,0,0.09) 3px, rgba(0,0,0,0.09) 6px);
+      box-shadow: 0 3px 8px rgba(60, 45, 35, 0.12), inset 0 1px 3px rgba(255,255,255,0.4);
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .thin-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+    .thin-scroll::-webkit-scrollbar-thumb { background: #D6D3D1; border-radius: 9999px; }
+  </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col select-none">
+
+  <!-- ========================================================= -->
+  <!-- 頂部導覽列 -->
+  <!-- ========================================================= -->
+  <header class="shrink-0 bg-[#F7F4EF]/95 backdrop-blur-md border-b border-stone-200/90 px-3 sm:px-6 py-2.5 z-30">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="flex items-center gap-2">
+        <span class="text-lg sm:text-2xl font-bold tracking-wider text-stone-800 italic">Momhandmade.</span>
+        <span class="hidden md:inline-block text-[11px] bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-full font-bold">手作編織・客製選色工坊</span>
+      </div>
+
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <button onclick="toggleContactModal(true)" class="text-[11px] sm:text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 px-2.5 sm:px-3 py-1.5 rounded-xl transition flex items-center gap-1">
+          <span>💬 留言板詢問 / 匯款資訊</span>
+        </button>
+        <button onclick="toggleColorModal(true)" class="text-[11px] sm:text-xs font-bold bg-white hover:bg-stone-100 text-stone-700 border border-stone-300 px-2.5 sm:px-3 py-1.5 rounded-xl shadow-sm transition hidden sm:flex items-center gap-1">
+          <span>🎨 色卡下載</span>
+        </button>
+        <button onclick="toggleCartDrawer(true)" class="text-[11px] sm:text-xs font-bold bg-stone-800 hover:bg-stone-700 text-white px-3 sm:px-4 py-1.5 rounded-xl shadow-sm transition flex items-center gap-1.5">
+          <span>🛒 訂購車</span>
+          <span id="cart-badge" class="num-font bg-amber-400 text-stone-950 px-1.5 py-0.2 rounded-full text-[11px] font-extrabold">0</span>
+        </button>
+        <button onclick="openSellerBackend()" class="text-[11px] sm:text-xs font-bold bg-stone-200/80 hover:bg-stone-300 text-stone-700 px-2.5 py-1.5 rounded-xl transition flex items-center gap-1" title="賣家專屬管理後台">
+          <span>🔒 後台</span>
+          <span id="admin-unread-badge" class="modal-hidden w-2 h-2 rounded-full bg-red-500"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================= -->
+  <!-- STEP 1：橫向商品選擇列 -->
+  <!-- ========================================================= -->
+  <section class="shrink-0 bg-white/70 border-b border-stone-200/70 px-3 sm:px-6 py-2">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex items-center justify-between mb-1.5">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-stone-500">Step 1. 選擇編織款式（左右滑動挑選）</span>
+        <button onclick="toggleColorModal(true)" class="sm:hidden text-[11px] font-bold text-amber-800 underline">🎨 檢視完整色卡</button>
+      </div>
+      <div id="product-list" class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
+    </div>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- 主工作區：自適應雙欄佈局 -->
+  <!-- ========================================================= -->
+  <main class="flex-1 overflow-y-auto lg:overflow-hidden px-3 sm:px-6 py-3">
+    <div class="max-w-7xl mx-auto h-full grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+
+      <!-- 左欄 -->
+      <div class="lg:col-span-5 bg-white rounded-2xl p-3.5 sm:p-4 shadow-sm border border-stone-200/90 flex flex-col justify-between lg:h-full lg:overflow-y-auto thin-scroll space-y-3">
+        <div class="flex flex-wrap justify-between items-center gap-2 border-b border-stone-100 pb-2">
+          <div class="inline-flex bg-stone-100 p-1 rounded-xl">
+            <button id="btn-tab-svg" onclick="switchStageTab('svg')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition bg-white text-stone-900 shadow-sm">
+              ✨ 選色模擬圖
+            </button>
+            <button id="btn-tab-gallery" onclick="switchStageTab('gallery')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition text-stone-500 flex items-center gap-1">
+              <span>🖼️ 原本樣式圖示</span>
+              <span id="gallery-count-badge" class="num-font bg-amber-100 text-amber-900 px-1.5 rounded-full text-[10px]">1</span>
+            </button>
+          </div>
+          <label class="cursor-pointer text-[11px] font-bold text-amber-900 bg-amber-50 hover:bg-amber-100 px-2.5 py-1 rounded-lg border border-amber-200 transition flex items-center gap-1">
+            <span>＋ 新增樣式圖示(可多選)</span>
+            <input type="file" accept="image/*" multiple onchange="handleAddStyleImages(event)" class="hidden">
+          </label>
+        </div>
+
+        <div class="bg-gradient-to-b from-[#FAF7F2] to-[#EFECE6] rounded-2xl p-3 relative flex flex-col items-center justify-center min-h-[220px] sm:min-h-[250px] border border-stone-200/60">
+          <div class="absolute top-2.5 right-3 text-[11px] italic text-stone-400">Momhandmade.</div>
+          <div id="customizable-status-pill" class="absolute top-2.5 left-3"></div>
+
+          <div id="stage-tab-svg" class="w-full flex flex-col items-center justify-center pt-4">
+            <div id="svg-canvas-holder" class="flex items-center justify-center"></div>
+            <div id="svg-part-badges" class="flex flex-wrap justify-center gap-1 mt-2"></div>
+          </div>
+
+          <div id="stage-tab-gallery" class="modal-hidden w-full flex flex-col items-center justify-between pt-4">
+            <div class="relative w-full h-44 sm:h-48 flex items-center justify-center bg-white/70 rounded-xl overflow-hidden border border-stone-200/80">
+              <img id="gallery-main-img" src="" alt="商品原本樣式圖示" class="max-h-full max-w-full object-contain cursor-zoom-in" onclick="openLightbox()">
+              <button onclick="stepGallery(-1)" class="absolute left-2 bg-stone-900/60 hover:bg-stone-900 text-white w-7 h-7 rounded-full text-xs flex items-center justify-center">‹</button>
+              <button onclick="stepGallery(1)" class="absolute right-2 bg-stone-900/60 hover:bg-stone-900 text-white w-7 h-7 rounded-full text-xs flex items-center justify-center">›</button>
+              <button onclick="deleteCurrentStyleImage()" class="absolute bottom-2 right-2 bg-red-600/80 hover:bg-red-600 text-white text-[10px] px-2 py-0.5 rounded-md">刪除此圖</button>
+            </div>
+            <div class="w-full mt-2 flex items-center gap-2 overflow-x-auto no-scrollbar py-1" id="gallery-thumbs"></div>
+          </div>
+        </div>
+
+        <div id="selection-warning-box" class="bg-amber-50/90 border border-amber-300/90 rounded-xl px-3 py-2 text-[11px] sm:text-xs text-amber-950 leading-relaxed shadow-sm">
+          <div class="font-bold flex items-center gap-1 text-amber-900">
+            <span>⚠️ 訂製與選色重要提醒：</span>
+          </div>
+          <p class="mt-0.5 font-medium">
+            不接急件，如有特殊需求請提前告知，選色編織後無法更改，如色號有疑問，歡迎聯絡賣家。
+          </p>
+        </div>
+
+        <div class="space-y-2 pt-1 border-t border-stone-100">
+          <div class="flex items-center justify-between">
+            <div>
+              <div id="current-prod-title" class="text-sm sm:text-base font-bold text-stone-800"></div>
+              <div id="current-prod-price" class="text-xs sm:text-sm font-bold text-amber-800 num-font"></div>
+            </div>
+            <div class="flex items-center border border-stone-300 rounded-xl overflow-hidden bg-stone-50">
+              <button onclick="changeQty(-1)" class="px-2.5 py-1 hover:bg-stone-200 font-bold text-stone-600 text-xs">-</button>
+              <span id="qty-display" class="px-3 py-1 text-xs font-bold num-font">1</span>
+              <button onclick="changeQty(1)" class="px-2.5 py-1 hover:bg-stone-200 font-bold text-stone-600 text-xs">+</button>
+            </div>
+          </div>
+
+          <input id="item-note" type="text" placeholder="特殊需求請提前告知（例：提繩加長、配件微調...）" class="w-full text-xs bg-[#FAF7F2] border border-stone-200 rounded-xl px-3 py-2 focus:outline-none focus:border-stone-500">
+
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="addToCart()" class="bg-stone-800 hover:bg-stone-700 text-white font-bold py-2.5 px-3 rounded-xl text-xs shadow-sm transition flex items-center justify-center gap-1">
+              <span>➕ 加入訂購車</span>
+            </button>
+            <button onclick="quickCopySingle()" class="bg-[#06C755] hover:bg-[#05b34c] text-white font-bold py-2.5 px-3 rounded-xl text-xs shadow-sm transition flex items-center justify-center gap-1">
+              <span>📋 複製訂貨資訊</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右欄 -->
+      <div class="lg:col-span-7 bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-stone-200/90 flex flex-col justify-between lg:h-full lg:overflow-y-auto thin-scroll space-y-4">
+        
+        <div id="customizable-panel" class="space-y-4 modal-hidden">
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <label class="text-xs font-bold uppercase tracking-wider text-stone-500">
+                Step 2. 點選要配色的編織部位
+              </label>
+              <span class="text-[11px] text-amber-800 font-semibold">點擊下方色球立即換色</span>
+            </div>
+            <div id="part-selector-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5"></div>
+          </div>
+
+          <div class="border-t border-stone-100 pt-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+              <label id="step3-label" class="text-xs font-bold text-stone-700">Step 3. 點擊色球套用至指定部位</label>
+              <div class="inline-flex bg-stone-100 p-1 rounded-xl self-start">
+                <button id="tab-palette-24" onclick="switchPalette('24')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition bg-stone-800 text-white shadow-sm">
+                  24色毛線球 (#02~#40)
+                </button>
+                <button id="tab-palette-20" onclick="switchPalette('20')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition text-stone-600">
+                  20色粗毛線 (#302~#346)
+                </button>
+              </div>
+            </div>
+
+            <div id="palette-24-container" class="grid grid-cols-4 sm:grid-cols-6 gap-y-3.5 gap-x-2 bg-[#FAF7F2] p-3.5 rounded-2xl border border-stone-200"></div>
+            <div id="palette-20-container" class="modal-hidden grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-[#FAF7F2] p-3.5 rounded-2xl border border-stone-200"></div>
+          </div>
+        </div>
+
+        <div id="non-customizable-panel" class="my-auto py-8 px-4 text-center space-y-4 bg-[#FAF7F2] rounded-2xl border-2 border-dashed border-stone-300 modal-hidden">
+          <div class="w-14 h-14 mx-auto rounded-full bg-amber-100 text-amber-800 flex items-center justify-center text-2xl shadow-sm">
+            🧶
+          </div>
+          <div class="space-y-1.5 max-w-md mx-auto">
+            <span class="text-[11px] font-bold uppercase tracking-widest bg-stone-800 text-white px-3 py-0.5 rounded-full">固定配色款式・無法選色</span>
+            <h3 class="text-base sm:text-lg font-bold text-stone-800 pt-1">此款商品為設計師固定配色，無開放線上自選色號</h3>
+            <p class="text-xs text-stone-600 leading-relaxed">
+              此商品將依照「原本樣式圖示」之經典配色進行編織製作。<br>
+              <strong>不接急件，如有特殊需求請提前告知，選色編織後無法更改，如色號有疑問，歡迎聯絡賣家！</strong>
+            </p>
+          </div>
+          <div class="flex flex-wrap justify-center gap-2 pt-2">
+            <button onclick="switchStageTab('gallery')" class="text-xs font-bold bg-white hover:bg-stone-100 text-stone-800 border border-stone-300 px-4 py-2 rounded-xl shadow-sm transition">
+              🖼️ 查看原本樣式圖示
+            </button>
+            <button onclick="toggleContactModal(true)" class="text-xs font-bold bg-amber-700 hover:bg-amber-600 text-white px-4 py-2 rounded-xl shadow-sm transition">
+              💬 前往留言板詢問特殊需求
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-stone-50 border border-stone-200/90 rounded-xl p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+          <div class="space-y-0.5">
+            <div class="font-bold text-stone-800 flex items-center gap-1.5">
+              <span>🏦 匯款後才開始排單作業</span>
+              <span class="text-[11px] font-normal text-stone-500">（結帳時請填寫匯款帳號後五碼）</span>
+            </div>
+            <div class="text-[11px] text-stone-500">
+              對色號有疑問或想確認訂貨？歡迎使用線上留言板詢問，賣家將透過電話或信箱回覆您！
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="copyBankAccount()" class="bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 font-bold px-2.5 py-1.5 rounded-lg text-[11px] shadow-sm transition">
+              🏦 複製匯款帳號
+            </button>
+            <button onclick="toggleContactModal(true)" class="bg-stone-800 hover:bg-stone-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[11px] shadow-sm transition">
+              💬 留言板詢問
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Toast -->
+  <div id="global-toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-stone-900/95 text-white px-4 py-3 rounded-2xl shadow-2xl border border-stone-700 max-w-md w-[92%] text-xs leading-relaxed text-center transition-all modal-hidden"></div>
+
+  <!-- 彈窗 1：訂購車結帳 -->
+  <div id="cart-drawer" class="modal-hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-end" onclick="if(event.target === this) toggleCartDrawer(false)">
+    <div class="bg-white w-full max-w-lg h-full p-5 sm:p-6 flex flex-col justify-between shadow-2xl overflow-y-auto thin-scroll">
+      <div class="space-y-4">
+        <div class="flex justify-between items-center border-b border-stone-200 pb-3 sticky top-0 bg-white z-10">
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-stone-800">🛒 您的客製化訂購車</h3>
+            <p class="text-[11px] text-amber-800 font-semibold">不接急件・選色編織後無法更改・匯款確認後開始作業</p>
+          </div>
+          <button onclick="toggleCartDrawer(false)" class="text-stone-400 hover:text-stone-800 text-xl font-bold px-2">✕</button>
+        </div>
+
+        <div id="cart-items-container" class="space-y-2.5"></div>
+
+        <div id="cart-checkout-section" class="modal-hidden space-y-4 border-t border-stone-200 pt-4">
+          <div class="bg-[#FAF7F2] p-3.5 rounded-2xl border border-stone-200 space-y-3">
+            <label class="block text-xs font-bold text-stone-800">1. 選擇取貨方式 *</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button id="ship-btn-cvs" onclick="setShippingMethod('cvs')" class="p-2.5 rounded-xl border text-left transition bg-stone-800 text-white border-stone-800 shadow-sm">
+                <div class="text-xs font-bold">🏪 超商取貨 (+NT$ 60)</div>
+                <div class="text-[10px] opacity-80 mt-0.5">7-11 / 全家店到店</div>
+              </button>
+              <button id="ship-btn-pickup" onclick="setShippingMethod('pickup')" class="p-2.5 rounded-xl border text-left transition bg-white text-stone-700 border-stone-300">
+                <div class="text-xs font-bold">🤝 自取面交 (NT$ 0)</div>
+                <div class="text-[10px] opacity-80 mt-0.5">以買家方便面交為主</div>
+              </button>
+            </div>
+
+            <div id="shipping-cvs-box" class="space-y-2.5 pt-1">
+              <div class="flex flex-wrap items-center justify-between gap-1">
+                <span class="text-[11px] font-bold text-stone-600">📍 Google 地圖查詢超商店名與地址：</span>
+                <div class="flex gap-1">
+                  <button onclick="searchMapStore('7-ELEVEN')" class="text-[10px] bg-white border border-stone-300 px-2 py-0.5 rounded-md font-bold hover:bg-stone-100">搜 7-11</button>
+                  <button onclick="searchMapStore('全家便利商店')" class="text-[10px] bg-white border border-stone-300 px-2 py-0.5 rounded-md font-bold hover:bg-stone-100">搜 全家</button>
+                </div>
+              </div>
+
+              <div class="flex gap-1.5">
+                <input id="map-search-input" type="text" placeholder="輸入縣市路名查詢超商（例：台中市西屯區 7-11）" class="flex-1 text-xs bg-white border border-stone-300 rounded-xl px-3 py-1.5">
+                <button onclick="updateGoogleMap()" class="bg-stone-700 hover:bg-stone-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shrink-0">查詢地圖</button>
+              </div>
+
+              <div class="w-full h-44 rounded-xl overflow-hidden border border-stone-300 bg-stone-100 relative">
+                <iframe id="google-map-iframe" class="w-full h-full border-0" loading="lazy" allowfullscreen src="https://maps.google.com/maps?q=台灣+7-ELEVEN+便利商店&hl=zh-TW&z=14&output=embed">
+                </iframe>
+              </div>
+              <p class="text-[10px] text-stone-500">💡 您可於上方地圖點擊超商查看店名與地址，並填寫於下方欄位：</p>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <input id="cvs-store-name" type="text" placeholder="超商別與店名 * (例：7-11 逢甲門市)" class="w-full text-xs bg-white border border-stone-300 rounded-xl px-3 py-2">
+                <input id="cvs-store-address" type="text" placeholder="超商門市地址 *" class="w-full text-xs bg-white border border-stone-300 rounded-xl px-3 py-2">
+              </div>
+            </div>
+
+            <div id="shipping-pickup-box" class="modal-hidden space-y-2 pt-1">
+              <p class="text-[11px] text-amber-900 font-semibold">🤝 自取免運費（NT$ 0），地點與時間以買家方便面交為主：</p>
+              <input id="pickup-location-input" type="text" placeholder="請輸入您方便面交的地點與時段 * (例：捷運站出口 / 週末下午)" class="w-full text-xs bg-white border border-stone-300 rounded-xl px-3 py-2">
+            </div>
+          </div>
+
+          <div class="bg-amber-50/80 p-3.5 rounded-2xl border border-amber-200 space-y-2">
+            <div class="flex justify-between items-center">
+              <label class="text-xs font-bold text-amber-950">2. 匯款資訊與回報帳號後五碼 *</label>
+              <button onclick="copyBankAccount()" class="text-[11px] font-bold text-amber-800 underline">複製匯款帳號</button>
+            </div>
+            <div class="text-xs text-stone-700 bg-white/90 p-2.5 rounded-xl border border-amber-200/70 space-y-0.5">
+              <div>銀行代碼：<strong id="display-bank-name"></strong></div>
+              <div>匯款帳號：<strong id="display-bank-account" class="num-font text-amber-900"></strong></div>
+              <div class="text-[11px] text-stone-500" id="display-bank-owner"></div>
+            </div>
+            <p class="text-[11px] text-red-700 font-bold">⚠️ 經匯款確認後才會開始排單編織作業！</p>
+            <input id="remit-last5" type="text" maxlength="10" placeholder="請輸入您的匯款帳號後五碼 * (若剛下單尚未匯款可填「待補」)" class="w-full text-xs bg-white border border-amber-300 rounded-xl px-3 py-2 font-bold">
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-xs font-bold text-stone-800">3. 買家訂購聯絡資訊（供賣家核對訂單與回覆通知） *</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <input id="customer-name" type="text" placeholder="買家姓名 / 暱稱 *" class="w-full text-xs bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
+              <input id="customer-phone" type="tel" placeholder="聯絡電話 * (例：0912-345678)" class="w-full text-xs bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
+            </div>
+            <input id="customer-email" type="email" placeholder="聯絡電子信箱 Email * (供賣家回覆確認訂單與出貨通知)" class="w-full text-xs bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
+          </div>
+
+          <div class="bg-stone-100 p-3.5 rounded-2xl space-y-1 text-xs">
+            <div class="flex justify-between text-stone-600">
+              <span>商品小計</span>
+              <span id="summary-subtotal" class="num-font font-bold">NT$ 0</span>
+            </div>
+            <div class="flex justify-between text-stone-600">
+              <span id="summary-shipping-label">運費（超商取貨）</span>
+              <span id="summary-shipping-fee" class="num-font font-bold">NT$ 60</span>
+            </div>
+            <div class="flex justify-between text-base font-bold text-stone-900 border-t border-stone-300 pt-1.5 mt-1">
+              <span>應付總金額</span>
+              <span id="cart-total-amount" class="num-font text-amber-800 text-lg">NT$ 0</span>
+            </div>
+          </div>
+
+          <div class="space-y-2 pt-1">
+            <button onclick="submitOrder()" class="w-full bg-stone-900 hover:bg-stone-800 text-white font-bold py-3.5 rounded-xl text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-1.5">
+              <span>✅ 送出訂單至平台後台 ＆ 自動複製訂貨資訊</span>
+            </button>
+            <button onclick="toggleCartDrawer(false); toggleContactModal(true);" class="w-full bg-emerald-700 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs transition">
+              💬 有疑問？前往買家留言板詢問賣家
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 彈窗 2：買家詢問留言板 -->
+  <div id="contact-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 modal-hidden" onclick="if(event.target === this) toggleContactModal(false)">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 space-y-5 shadow-2xl max-h-[92vh] overflow-y-auto thin-scroll">
+      <div class="flex justify-between items-center border-b border-stone-200 pb-3">
+        <div>
+          <h3 class="text-lg font-bold text-stone-800">💬 買家詢問留言板 ＆ 訂購匯款須知</h3>
+          <p class="text-xs text-stone-500">對色號有疑問、特殊客製需求或回報匯款後五碼，請留下電話與信箱，賣家將盡快回覆您</p>
+        </div>
+        <button onclick="toggleContactModal(false)" class="text-stone-400 hover:text-stone-800 text-xl font-bold px-2">✕</button>
+      </div>
+
+      <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 space-y-1.5 text-xs">
+        <div class="font-bold text-amber-950 flex justify-between items-center">
+          <span>🏦 專屬匯款帳戶（匯款後請回報帳號後五碼，確認後開始作業）</span>
+          <button onclick="copyBankAccount()" class="underline text-amber-800 font-bold">複製帳號</button>
+        </div>
+        <div id="contact-bank-info" class="text-stone-700 space-y-0.5 pt-1"></div>
+      </div>
+
+      <div class="border-t border-stone-200 pt-4 space-y-3">
+        <h4 class="text-xs font-bold text-stone-800">📩 線上留言詢問（賣家可於後台查閱，並透過電話、信箱或於下方留言板直接回覆）</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <input id="msg-sender-name" type="text" placeholder="您的稱呼 *" class="text-xs bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
+          <input id="msg-sender-phone" type="tel" placeholder="聯絡電話 *" class="text-xs bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
+          <input id="msg-sender-email" type="email" placeholder="電子信箱 Email *" class="text-xs bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
+        </div>
+        <textarea id="msg-content" rows="3" placeholder="請輸入想詢問的色號、客製需求，或回報您的匯款帳號後五碼..." class="w-full text-xs bg-stone-50 border border-stone-300 rounded-xl p-3"></textarea>
+        <button onclick="submitBuyerMessage()" class="w-full bg-stone-800 hover:bg-stone-700 text-white font-bold py-2.5 rounded-xl text-xs shadow transition">
+          📨 送出詢問留言
+        </button>
+      </div>
+
+      <div class="border-t border-stone-200 pt-4 space-y-2.5">
+        <div class="flex justify-between items-center">
+          <h4 class="text-xs font-bold text-stone-700">📋 留言板問答紀錄</h4>
+          <span class="text-[11px] text-stone-400">買家電話與信箱僅賣家後台可見，保障隱私</span>
+        </div>
+        <div id="public-message-board" class="space-y-2 max-h-56 overflow-y-auto thin-scroll pr-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 彈窗 3：賣家後台密碼登入視窗 -->
+  <div id="admin-login-modal" class="fixed inset-0 z-50 bg-black/65 backdrop-blur-sm flex items-center justify-center p-4 modal-hidden" onclick="if(event.target === this) closeAdminLogin()">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center border-b border-stone-200 pb-3">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider bg-stone-800 text-white px-2.5 py-0.5 rounded-full">Seller Only</span>
+          <h3 class="text-base font-bold text-stone-800 mt-1">🔒 賣家專屬後台登入</h3>
+        </div>
+        <button onclick="closeAdminLogin()" class="text-stone-400 hover:text-stone-800 text-lg font-bold">✕</button>
+      </div>
+
+      <p class="text-xs text-stone-500 leading-relaxed">
+        買家僅供於前台選色、下單與留言。賣家請輸入包含<strong>「英文＋數字＋符號」</strong>之密碼登入後台查閱訂購資訊：
+      </p>
+
+      <div class="space-y-2">
+        <input id="admin-password-input" type="text" placeholder="請輸入賣家後台密碼 (預設: Mom@2026!)" onkeydown="if(event.key==='Enter') verifyAdminLogin()" class="w-full text-xs bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-stone-800 num-font">
+        <label class="flex items-center gap-1.5 text-[11px] text-stone-500 cursor-pointer">
+          <input type="checkbox" onchange="document.getElementById('admin-password-input').type = this.checked ? 'text' : 'password'">
+          <span>顯示密碼文字</span>
+        </label>
+        <p id="login-error-msg" class="modal-hidden text-xs font-bold text-red-600"></p>
+      </div>
+
+      <button onclick="verifyAdminLogin()" class="w-full bg-stone-900 hover:bg-stone-800 text-white font-bold py-2.5 rounded-xl text-xs shadow transition">
+        驗證密碼並進入後台
+      </button>
+    </div>
+  </div>
+
+  <!-- 彈窗 4：賣家管理後台 -->
+  <div id="admin-dashboard-modal" class="fixed inset-0 z-50 bg-stone-900/75 backdrop-blur-sm flex items-center justify-center p-2 sm:p-6 modal-hidden">
+    <div class="bg-[#FAF7F2] rounded-3xl max-w-6xl w-full h-[92vh] flex flex-col shadow-2xl overflow-hidden border border-stone-300">
+      
+      <div class="bg-stone-900 text-white px-5 py-3.5 flex flex-wrap justify-between items-center gap-2 shrink-0">
+        <div class="flex items-center gap-2.5">
+          <span class="bg-amber-400 text-stone-950 text-xs font-extrabold px-2.5 py-0.5 rounded-full">賣家管理後台</span>
+          <h3 class="text-sm sm:text-base font-bold">Momhandmade. 訂購資訊查閱・留言回覆・商品管理・GitHub 網站管理中心</h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="syncFromGitHubGist(true)" class="text-xs bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-xl transition">🔄 雲端同步讀取</button>
+          <button onclick="logoutAdmin()" class="text-xs bg-stone-700 hover:bg-stone-600 text-white px-3 py-1.5 rounded-xl transition">登出後台</button>
+          <button onclick="closeAdminDashboard()" class="text-xs bg-white text-stone-900 font-bold px-3 py-1.5 rounded-xl transition">返回前台商店 ✕</button>
+        </div>
+      </div>
+
+      <div class="bg-white border-b border-stone-200 px-5 py-2 flex gap-2 overflow-x-auto shrink-0">
+        <button id="admin-tab-orders" onclick="switchAdminTab('orders')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 shrink-0">
+          📦 查閱訂購資訊 (<span id="admin-order-count">0</span>)
+        </button>
+        <button id="admin-tab-messages" onclick="switchAdminTab('messages')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 shrink-0">
+          💬 買家留言板與回覆 (<span id="admin-msg-count">0</span>)
+        </button>
+        <button id="admin-tab-products" onclick="switchAdminTab('products')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 shrink-0">
+          🧶 商品管理 ＆ 新增商品
+        </button>
+        <button id="admin-tab-settings" onclick="switchAdminTab('settings')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 shrink-0">
+          🏦 匯款帳號 ＆ 密碼設定
+        </button>
+        <button id="admin-tab-github" onclick="switchAdminTab('github')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-stone-800 text-white shrink-0">
+          🌐 GitHub 網站架設 ＆ 雲端同步
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-4 sm:p-6 thin-scroll">
+        <div id="admin-panel-orders" class="space-y-3 modal-hidden"></div>
+        <div id="admin-panel-messages" class="modal-hidden space-y-3"></div>
+        
+        <!-- 商品管理分頁 (包含新增商品按鈕) -->
+        <div id="admin-panel-products" class="space-y-4 modal-hidden">
+          <div class="flex justify-between items-center mb-4 bg-amber-50 p-3.5 rounded-2xl border border-amber-200">
+            <div>
+              <h4 class="text-xs font-bold text-amber-950">📦 商店商品列表與新增管理</h4>
+              <p class="text-[11px] text-stone-600">您可以隨時點擊右側按鈕新增全新手作編織商品方案、調整價格或設定選色權限。</p>
+            </div>
+            <button onclick="openAddProductModal()" class="bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow transition shrink-0">
+              ＋ 新增全新商品方案
+            </button>
+          </div>
+          <div id="admin-products-list-container" class="space-y-3"></div>
+        </div>
+
+        <div id="admin-panel-settings" class="max-w-xl space-y-4 bg-white p-5 rounded-2xl border border-stone-200 modal-hidden">
+          <h4 class="text-sm font-bold text-stone-800 border-b pb-2">🏦 賣家匯款資訊與後台安全密碼設定</h4>
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="font-bold text-stone-600">銀行名稱與代碼</label>
+              <input id="set-bank-name" type="text" class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2">
+            </div>
+            <div>
+              <label class="font-bold text-stone-600">匯款帳號</label>
+              <input id="set-bank-account" type="text" class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2 num-font">
+            </div>
+            <div>
+              <label class="font-bold text-stone-600">戶名與匯款備註</label>
+              <input id="set-bank-owner" type="text" class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2">
+            </div>
+            <div class="pt-2 border-t border-stone-200">
+              <label class="font-bold text-stone-600">修改賣家後台密碼（需含英文＋數字＋符號，例如：Mom@2026!）</label>
+              <input id="set-admin-pwd" type="text" class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2 num-font">
+            </div>
+            <button onclick="saveStoreSettings()" class="bg-stone-900 hover:bg-stone-800 text-white font-bold px-5 py-2.5 rounded-xl shadow">
+              💾 儲存設定
+            </button>
+          </div>
+        </div>
+
+        <div id="admin-panel-github" class="space-y-5 max-w-4xl">
+          <div class="bg-white p-5 rounded-2xl border border-stone-200 space-y-3">
+            <div class="flex flex-wrap justify-between items-center gap-2 border-b border-stone-100 pb-3">
+              <div>
+                <span class="text-[10px] font-bold uppercase bg-stone-900 text-white px-2.5 py-0.5 rounded-full">Step 1. 免費永久架站</span>
+                <h4 class="text-sm sm:text-base font-bold text-stone-800 mt-1">🚀 使用 GitHub Pages 設立專屬網站</h4>
+              </div>
+              <button onclick="downloadFullSiteHtml()" class="bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition flex items-center gap-1.5">
+                <span>📥 下載最新網站檔案 (index.html)</span>
+              </button>
+            </div>
+            <ol class="text-xs text-stone-600 space-y-2 list-decimal list-inside leading-relaxed bg-[#FAF7F2] p-4 rounded-xl border border-stone-200/80">
+              <li>登入 GitHub.com，點擊右上角 <strong>「+」➔「New repository」</strong> 建立新專案（例如命名為 <code>momhandmade</code>，並勾選 <strong>Public</strong>）。</li>
+              <li>點擊上方 <strong>「📥 下載最新網站檔案 (index.html)」</strong> 按鈕將檔案下載。</li>
+              <li>在 GitHub 專案頁面點擊 <strong>「Add file」➔「Upload files」</strong>，將 <code>index.html</code> 上傳並點擊 <strong>「Commit changes」</strong>。</li>
+              <li>進入專案頂部的 <strong>「Settings」➔「Pages」</strong>，Branch 選擇 <strong><code>main</code></strong> 並按 <strong>Save</strong>。</li>
+            </ol>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-stone-200 space-y-3">
+            <div class="border-b border-stone-100 pb-3">
+              <span class="text-[10px] font-bold uppercase bg-emerald-700 text-white px-2.5 py-0.5 rounded-full">Step 2. 跨裝置雲端同步（選填）</span>
+              <h4 class="text-sm sm:text-base font-bold text-stone-800 mt-1">☁️ 串接 GitHub Gist 雲端資料庫</h4>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div>
+                <label class="font-bold text-stone-600">GitHub Personal Access Token (需勾選 gist 權限)</label>
+                <input id="github-token-input" type="password" placeholder="github_pat_..." class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2 num-font">
+              </div>
+              <div>
+                <label class="font-bold text-stone-600">GitHub Gist ID (留空可自動建立)</label>
+                <input id="github-gist-input" type="text" placeholder="例如：a1b2c3d4e5f6..." class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2 num-font">
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-2 pt-1">
+              <button onclick="saveAndInitGitHubSync()" class="bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition">
+                ☁️ 儲存並立即同步至 GitHub 雲端
+              </button>
+              <button onclick="syncFromGitHubGist(true)" class="bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition">
+                🔄 從 GitHub 雲端拉取最新資料
+              </button>
+            </div>
+            <p id="github-sync-status" class="text-xs font-bold text-emerald-700"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 彈窗 5：完整色卡總覽與 PNG 下載 -->
+  <div id="color-modal" class="modal-hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto" onclick="if(event.target === this) toggleColorModal(false)">
+    <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6 shadow-2xl thin-scroll">
+      <div class="flex justify-between items-center border-b border-stone-200 pb-3 sticky top-0 bg-white z-10">
+        <div>
+          <h3 class="text-base sm:text-lg font-bold text-stone-800">🎨 Momhandmade. 品牌色卡總覽</h3>
+          <p class="text-xs text-stone-500">不接急件，選色編織後無法更改，如色號有疑問，歡迎聯絡賣家</p>
+        </div>
+        <button onclick="toggleColorModal(false)" class="text-stone-400 hover:text-stone-800 text-2xl font-bold px-2">✕</button>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex justify-end">
+          <button onclick="exportChart('export-24', 'Momhandmade_24色毛線球色卡.png')" class="bg-stone-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl shadow">📸 下載 24色毛線球色卡 (PNG)</button>
+        </div>
+        <div id="export-24" class="bg-[#FAF7F2] p-6 rounded-3xl border border-stone-200">
+          <div class="flex justify-between items-end border-b border-stone-200 pb-2 mb-4">
+            <h4 class="text-base font-bold text-stone-800">經典手作毛線・24 色訂製色卡</h4>
+            <span class="text-xs italic text-stone-500">Momhandmade.</span>
+          </div>
+          <div id="export-24-grid" class="grid grid-cols-4 sm:grid-cols-6 gap-y-5 gap-x-3"></div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex justify-end">
+          <button onclick="exportChart('export-20', 'Momhandmade_20色粗毛線色卡.png')" class="bg-amber-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl shadow">📸 下載 20色粗毛線色卡 (PNG)</button>
+        </div>
+        <div id="export-20" class="bg-[#FAF7F2] p-6 rounded-3xl border border-stone-200">
+          <div class="flex justify-between items-end border-b border-stone-200 pb-2 mb-4">
+            <h4 class="text-base font-bold text-stone-800">精選編織線材・20 色專屬色卡</h4>
+            <span class="text-xs italic text-stone-500">Momhandmade.</span>
+          </div>
+          <div id="export-20-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 彈窗 6：樣式圖示放大燈箱 -->
+  <div id="lightbox-modal" class="modal-hidden fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" alt="放大預覽" class="max-h-[90vh] max-w-[92vw] rounded-2xl shadow-2xl object-contain">
+  </div>
+
+  <!-- 彈窗 7：新增商品彈窗 -->
+  <div id="add-product-modal" class="modal-hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onclick="if(event.target === this) closeAddProductModal()">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center border-b border-stone-200 pb-3">
+        <h3 class="text-base font-bold text-stone-800">➕ 新增全新手作商品方案</h3>
+        <button onclick="closeAddProductModal()" class="text-stone-400 hover:text-stone-800 text-lg font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="font-bold text-stone-700">商品名稱 *</label>
+          <input id="new-prod-name" type="text" placeholder="例如：手工編織鬱金香花束" class="w-full mt-1 bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="font-bold text-stone-700">商品售價 (NT$) *</label>
+            <input id="new-prod-price" type="number" min="0" placeholder="380" class="w-full mt-1 bg-stone-50 border border-stone-300 rounded-xl px-3 py-2 num-font">
+          </div>
+          <div>
+            <label class="font-bold text-stone-700">圖示表情 (Emoji)</label>
+            <input id="new-prod-icon" type="text" value="🌷" class="w-full mt-1 bg-stone-50 border border-stone-300 rounded-xl px-3 py-2 text-center">
+          </div>
+        </div>
+        <div>
+          <label class="font-bold text-stone-700">舞台預覽外觀形狀</label>
+          <select id="new-prod-shape" class="w-full mt-1 bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
+            <option value="flower">花朵造型 (flower)</option>
+            <option value="zongzi">粽子/束口袋造型 (zongzi)</option>
+            <option value="bear">小熊/圓形置物墊造型 (bear)</option>
+            <option value="bandana">帽子/頭巾造型 (bandana)</option>
+          </select>
+        </div>
+        <div>
+          <label class="font-bold text-stone-700">選色部位名稱（用逗號隔開）</label>
+          <input id="new-prod-parts" type="text" value="花瓣顏色, 花莖顏色" class="w-full mt-1 bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
+        </div>
+        <div>
+          <label class="font-bold text-stone-700">上傳商品樣式圖片 (可多選)</label>
+          <input id="new-prod-images" type="file" accept="image/*" multiple class="w-full mt-1 text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-100 file:text-amber-950 hover:file:bg-amber-200">
+        </div>
+
+        <button onclick="confirmAddNewProduct()" class="w-full bg-stone-900 hover:bg-stone-800 text-white font-bold py-3 rounded-xl shadow transition mt-2">
+          ✅ 確認建立新商品
+        </button>
+      </div>
+    </div>
+  </div>
+
+<script>
+const palette24 = [
+  { code: '#40', name: '米白', hex: '#EFECE6' },
+  { code: '#08', name: '米色', hex: '#DFCBB5' },
+  { code: '#02', name: '奶油', hex: '#F2E1B3' },
+  { code: '#23', name: '杏桃', hex: '#E5B045' },
+  { code: '#17', name: '灰棕', hex: '#BCA89F' },
+  { code: '#19', name: '咖啡', hex: '#9A6B45' },
+  { code: '#03', name: '薄荷', hex: '#B8DDD1' },
+  { code: '#06', name: '豆綠', hex: '#A4AE77' },
+  { code: '#32', name: '松綠', hex: '#1E7A50' },
+  { code: '#33', name: '墨綠', hex: '#4B5338' },
+  { code: '#35', name: '石墨', hex: '#716D74' },
+  { code: '#21', name: '深棕', hex: '#583E3A' },
+  { code: '#09', name: '裸粉', hex: '#ECC3BA' },
+  { code: '#10', name: '粉紅', hex: '#E5A0A6' },
+  { code: '#12', name: '藕荷', hex: '#C68597' },
+  { code: '#13', name: '薰衣草', hex: '#B8A3CE' },
+  { code: '#36', name: '鮭魚', hex: '#E06243' },
+  { code: '#38', name: '紅色', hex: '#B81D24' },
+  { code: '#04', name: '天藍', hex: '#9EC1C7' },
+  { code: '#26', name: '淺灰藍', hex: '#889EC4' },
+  { code: '#30', name: '孔雀藍', hex: '#5D9BB8' },
+  { code: '#34', name: '鋼青', hex: '#5B6E86' },
+  { code: '#28', name: '寶藍', hex: '#1C3F85' },
+  { code: '#39', name: '黑色', hex: '#232730' }
+];
+
+const palette20 = [
+  { code: '#302', name: '淡米色', hex: '#EAD7C3' },
+  { code: '#321', name: '淡黃色', hex: '#DFD2AC' },
+  { code: '#303', name: '灰米色', hex: '#C8B9AE' },
+  { code: '#311', name: '芥末黃', hex: '#D8A456' },
+  { code: '#337', name: '鵝黃', hex: '#F6E27F' },
+  { code: '#307', name: '薄荷綠', hex: '#C2CBC4' },
+  { code: '#317', name: '檸檬綠', hex: '#DDE19E' },
+  { code: '#325', name: '青色', hex: '#7FA8A0' },
+  { code: '#328', name: '亮綠', hex: '#5FB057' },
+  { code: '#338', name: '墨綠', hex: '#344E46' },
+  { code: '#326', name: '軍綠', hex: '#585838' },
+  { code: '#341', name: '嬰兒藍', hex: '#9EB8CC' },
+  { code: '#340', name: '藍寶石', hex: '#418E9E' },
+  { code: '#319', name: '墨藍', hex: '#354856' },
+  { code: '#346', name: '櫻花橘', hex: '#D46D6A' },
+  { code: '#322', name: '桃紅', hex: '#C43666' },
+  { code: '#343', name: '薰衣草', hex: '#8F7B9C' },
+  { code: '#330', name: '亮橘', hex: '#DF6432' },
+  { code: '#313', name: '黑色', hex: '#1E1D1B' },
+  { code: '#320', name: '白色', hex: '#EFEFEF' }
+];
+
+function createSampleCardSvg(title, subtitle, bgHex, accentHex1, accentHex2) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="420" viewBox="0 0 600 420">
+    <rect width="600" height="420" rx="24" fill="${bgHex}"/>
+    <circle cx="300" cy="190" r="105" fill="${accentHex1}" stroke="#ffffff" stroke-width="6"/>
+    <circle cx="300" cy="190" r="55" fill="${accentHex2}" stroke="#ffffff" stroke-width="4" stroke-dasharray="8 6"/>
+    <text x="300" y="345" text-anchor="middle" font-family="serif" font-size="24" font-weight="bold" fill="#292524">${title}</text>
+    <text x="300" y="378" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#78716c">${subtitle}｜Momhandmade. 實品樣式圖</text>
+  </svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+
+const defaultProducts = [
+  {
+    id: 1, name: '小雛菊花朵收納袋', price: 350, icon: '🌼', shape: 'flower', customizable: true,
+    parts: ['網袋顏色', '花瓣顏色', '花蕊顏色'], defaultCodes: ['#06', '#40', '#02'],
+    images: [
+      createSampleCardSvg('小雛菊花朵收納袋 (樣式一)', '豆綠網袋 × 米白花瓣 × 奶油花蕊', '#F5EFE6', '#A4AE77', '#EFECE6'),
+      createSampleCardSvg('小雛菊花朵收納袋 (樣式二)', '石墨網袋 × 鮭魚橘花瓣 × 米白花蕊', '#EFECE6', '#716D74', '#E06243')
+    ]
+  },
+  {
+    id: 2, name: '三角粽子造型零錢包', price: 350, icon: '🍙', shape: 'zongzi', customizable: true,
+    parts: ['上半部顏色', '下半部顏色', '滾邊顏色'], defaultCodes: ['#32', '#06', '#40'],
+    images: [
+      createSampleCardSvg('三角粽子零錢包 (抹茶綠款)', '松綠 × 豆綠 × 米白滾邊', '#F2F5EC', '#1E7A50', '#A4AE77')
+    ]
+  }
+];
+
+const EMBEDDED_INITIAL_STATE = null;
+
+let products = JSON.parse(localStorage.getItem('mom_products_v3')) || (EMBEDDED_INITIAL_STATE && EMBEDDED_INITIAL_STATE.products) || defaultProducts;
+let orders = JSON.parse(localStorage.getItem('mom_orders_v3')) || (EMBEDDED_INITIAL_STATE && EMBEDDED_INITIAL_STATE.orders) || [];
+let buyerMessages = JSON.parse(localStorage.getItem('mom_messages_v3')) || (EMBEDDED_INITIAL_STATE && EMBEDDED_INITIAL_STATE.buyerMessages) || [];
+let storeSettings = JSON.parse(localStorage.getItem('mom_settings_v3')) || (EMBEDDED_INITIAL_STATE && EMBEDDED_INITIAL_STATE.storeSettings) || {
+  bankName: '700 中華郵政（或 822 中國信託）',
+  bankAccount: '0001234-0567890',
+  bankOwner: 'Momhandmade 手作工坊（匯款後請回報後五碼）',
+  adminPwd: 'Mom@2026!',
+  githubToken: '',
+  githubGistId: ''
+};
+
+if (!storeSettings.adminPwd || /[\u4e00-\u9fa5]/.test(storeSettings.adminPwd)) {
+  storeSettings.adminPwd = 'Mom@2026!';
+}
+
+let currentProduct = products[0] || defaultProducts[0];
+let currentSelections = [];
+let activePartIndex = 0;
+let activePalette = '24';
+let stageTab = 'svg';
+let galleryIndex = 0;
+let currentQty = 1;
+let cart = [];
+let shippingMethod = 'cvs';
+let isAdminAuthenticated = false;
+
+function saveAllToStorage() {
+  try {
+    localStorage.setItem('mom_products_v3', JSON.stringify(products));
+    localStorage.setItem('mom_orders_v3', JSON.stringify(orders));
+    localStorage.setItem('mom_messages_v3', JSON.stringify(buyerMessages));
+    localStorage.setItem('mom_settings_v3', JSON.stringify(storeSettings));
+  } catch (e) {}
+  if (storeSettings.githubToken && storeSettings.githubGistId) {
+    syncToGitHubGist(false);
+  }
+}
+
+function findColorByCode(code) {
+  return palette24.find(c => c.code === code) || palette20.find(c => c.code === code) || palette24[0];
+}
+
+function selectProduct(prodId) {
+  currentProduct = products.find(p => p.id === prodId) || products[0];
+  activePartIndex = 0;
+  galleryIndex = 0;
+  currentSelections = currentProduct.parts.map((_, idx) => {
+    return findColorByCode(currentProduct.defaultCodes[idx] || '#40');
+  });
+  renderAll();
+}
+
+function selectPart(idx) {
+  if (!currentProduct.customizable) {
+    showToast('此商品為固定配色款式，無法自選色號！');
+    return;
+  }
+  activePartIndex = idx;
+  renderAll();
+}
+
+function pickColor(code) {
+  if (!currentProduct.customizable) return;
+  const picked = findColorByCode(code);
+  currentSelections[activePartIndex] = picked;
+  renderAll();
+  showToast(`已選「${currentProduct.parts[activePartIndex]}：${picked.code} ${picked.name}」`);
+}
+
+function switchPalette(pal) {
+  activePalette = pal;
+  document.getElementById('tab-palette-24').className = pal === '24'
+    ? 'px-2.5 py-1 rounded-lg text-[11px] font-bold transition bg-stone-800 text-white shadow-sm'
+    : 'px-2.5 py-1 rounded-lg text-[11px] font-bold transition text-stone-600';
+  document.getElementById('tab-palette-20').className = pal === '20'
+    ? 'px-2.5 py-1 rounded-lg text-[11px] font-bold transition bg-stone-800 text-white shadow-sm'
+    : 'px-2.5 py-1 rounded-lg text-[11px] font-bold transition text-stone-600';
+
+  document.getElementById('palette-24-container').classList.toggle('modal-hidden', pal !== '24');
+  document.getElementById('palette-20-container').classList.toggle('modal-hidden', pal !== '20');
+}
+
+function switchStageTab(tab) {
+  stageTab = tab;
+  const isSvg = tab === 'svg';
+  document.getElementById('stage-tab-svg').classList.toggle('modal-hidden', !isSvg);
+  document.getElementById('stage-tab-gallery').classList.toggle('modal-hidden', isSvg);
+
+  document.getElementById('btn-tab-svg').className = isSvg
+    ? 'px-2.5 py-1 rounded-lg text-xs font-bold transition bg-white text-stone-900 shadow-sm'
+    : 'px-2.5 py-1 rounded-lg text-xs font-bold transition text-stone-500';
+  document.getElementById('btn-tab-gallery').className = !isSvg
+    ? 'px-2.5 py-1 rounded-lg text-xs font-bold transition bg-white text-stone-900 shadow-sm flex items-center gap-1'
+    : 'px-2.5 py-1 rounded-lg text-xs font-bold transition text-stone-500 flex items-center gap-1';
+
+  renderGalleryStage();
+}
+
+function handleAddStyleImages(event, targetProdId = null) {
+  const files = Array.from(event.target.files || []);
+  if (!files.length) return;
+  const targetProd = targetProdId ? products.find(p => p.id === targetProdId) : currentProduct;
+  if (!targetProd.images) targetProd.images = [];
+
+  let loadedCount = 0;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      targetProd.images.push(e.target.result);
+      loadedCount++;
+      if (loadedCount === files.length) {
+        galleryIndex = targetProd.images.length - 1;
+        saveAllToStorage();
+        if (!targetProdId) switchStageTab('gallery');
+        renderAll();
+        if (isAdminAuthenticated) renderAdminProducts();
+        showToast(`✅ 已新增 ${files.length} 張圖示！`);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+  event.target.value = '';
+}
+
+function stepGallery(dir) {
+  const imgs = currentProduct.images || [];
+  if (!imgs.length) return;
+  galleryIndex = (galleryIndex + dir + imgs.length) % imgs.length;
+  renderGalleryStage();
+}
+
+function deleteCurrentStyleImage() {
+  const imgs = currentProduct.images || [];
+  if (imgs.length <= 1) {
+    showToast('至少需保留 1 張圖示！');
+    return;
+  }
+  imgs.splice(galleryIndex, 1);
+  galleryIndex = Math.max(0, galleryIndex - 1);
+  saveAllToStorage();
+  renderAll();
+  showToast('已刪除圖示');
+}
+
+function openLightbox() {
+  const imgs = currentProduct.images || [];
+  if (!imgs.length) return;
+  document.getElementById('lightbox-img').src = imgs[galleryIndex];
+  document.getElementById('lightbox-modal').classList.remove('modal-hidden');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox-modal').classList.add('modal-hidden');
+}
+
+// 新增商品彈窗控制
+function openAddProductModal() {
+  document.getElementById('add-product-modal').classList.remove('modal-hidden');
+}
+
+function closeAddProductModal() {
+  document.getElementById('add-product-modal').classList.add('modal-hidden');
+}
+
+function confirmAddNewProduct() {
+  const name = document.getElementById('new-prod-name').value.trim();
+  const price = parseInt(document.getElementById('new-prod-price').value, 10);
+  const icon = document.getElementById('new-prod-icon').value.trim() || '🎁';
+  const shape = document.getElementById('new-prod-shape').value;
+  const partsInput = document.getElementById('new-prod-parts').value.trim();
+  const imageInput = document.getElementById('new-prod-images');
+
+  if (!name || isNaN(price)) {
+    showToast('⚠️ 請完整填寫商品名稱與有效售價！');
+    return;
+  }
+
+  const parts = partsInput ? partsInput.split(',').map(s => s.trim()).filter(Boolean) : ['主體顏色'];
+  const defaultCodes = parts.map(() => '#40');
+
+  const files = Array.from(imageInput.files || []);
+  if (files.length === 0) {
+    createNewProductObj(name, price, icon, shape, parts, defaultCodes, [
+      createSampleCardSvg(name, '全新客製手作款式', '#F5EFE6', '#EFECE6', '#A4AE77')
+    ]);
+  } else {
+    let loadedImages = [];
+    let count = 0;
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        loadedImages.push(e.target.result);
+        count++;
+        if (count === files.length) {
+          createNewProductObj(name, price, icon, shape, parts, defaultCodes, loadedImages);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+}
+
+function createNewProductObj(name, price, icon, shape, parts, defaultCodes, images) {
+  const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+  const newProduct = {
+    id: newId,
+    name,
+    price,
+    icon,
+    shape,
+    customizable: true,
+    parts,
+    defaultCodes,
+    images
+  };
+
+  products.push(newProduct);
+  saveAllToStorage();
+  selectProduct(newId);
+  renderAdminAll();
+  closeAddProductModal();
+  showToast(`🎉 成功新增商品：「${name}」！`);
+}
+
+function renderAll() {
+  const prodListEl = document.getElementById('product-list');
+  prodListEl.innerHTML = products.map(p => {
+    const isSelected = p.id === currentProduct.id;
+    const badgeText = p.customizable ? `${p.parts.length}部位選色` : '固定配色';
+    const badgeClass = p.customizable
+      ? (isSelected ? 'bg-amber-400 text-stone-950' : 'bg-amber-50 text-amber-900')
+      : (isSelected ? 'bg-red-400 text-stone-950' : 'bg-stone-200 text-stone-700');
+
+    return `
+      <button onclick="selectProduct(${p.id})" class="shrink-0 px-3 py-2 rounded-xl text-left transition flex items-center gap-2.5 min-w-[185px] ${isSelected ? 'bg-stone-800 text-white shadow-md' : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'}">
+        <span class="text-xl">${p.icon}</span>
+        <div class="min-w-0 flex-1">
+          <div class="text-xs font-bold truncate">${p.name}</div>
+          <div class="flex items-center gap-1.5 mt-0.5">
+            <span class="text-[11px] num-font font-bold ${isSelected ? 'text-amber-300' : 'text-stone-500'}">NT$${p.price}</span>
+            <span class="text-[10px] px-1.5 py-0.2 rounded font-bold ${badgeClass}">${badgeText}</span>
+          </div>
+        </div>
+      </button>
+    `;
+  }).join('');
+
+  document.getElementById('current-prod-title').textContent = currentProduct.name;
+  document.getElementById('current-prod-price').textContent = `NT$ ${currentProduct.price} / 件`;
+
+  const statusPill = document.getElementById('customizable-status-pill');
+  if (currentProduct.customizable) {
+    statusPill.innerHTML = `<span class="bg-emerald-100 text-emerald-900 border border-emerald-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full">🎨 可自由選色款式</span>`;
+  } else {
+    statusPill.innerHTML = `<span class="bg-amber-200 text-amber-950 border border-amber-400 text-[10px] font-bold px-2.5 py-0.5 rounded-full">🔒 固定配色款式（無法選色）</span>`;
+  }
+
+  renderSvgStage();
+  renderGalleryStage();
+
+  const customPanel = document.getElementById('customizable-panel');
+  const nonCustomPanel = document.getElementById('non-customizable-panel');
+  if (currentProduct.customizable) {
+    customPanel.classList.remove('modal-hidden');
+    nonCustomPanel.classList.add('modal-hidden');
+    renderColorPickerPanels();
+  } else {
+    customPanel.classList.add('modal-hidden');
+    nonCustomPanel.classList.remove('modal-hidden');
+  }
+
+  document.getElementById('display-bank-name').textContent = storeSettings.bankName;
+  document.getElementById('display-bank-account').textContent = storeSettings.bankAccount;
+  document.getElementById('display-bank-owner').textContent = storeSettings.bankOwner;
+  document.getElementById('contact-bank-info').innerHTML = `
+    <div>銀行代碼：<strong>${storeSettings.bankName}</strong></div>
+    <div>匯款帳號：<strong class="num-font text-sm text-amber-950">${storeSettings.bankAccount}</strong></div>
+    <div>戶名備註：${storeSettings.bankOwner}</div>
+  `;
+
+  renderPublicMessageBoard();
+
+  const unreadBadge = document.getElementById('admin-unread-badge');
+  unreadBadge.classList.toggle('modal-hidden', orders.length === 0 && buyerMessages.length === 0);
+}
+
+function renderColorPickerPanels() {
+  const partGridEl = document.getElementById('part-selector-grid');
+  partGridEl.innerHTML = currentProduct.parts.map((partName, idx) => {
+    const sel = currentSelections[idx];
+    const isActive = idx === activePartIndex;
+    return `
+      <div onclick="selectPart(${idx})" class="p-2.5 rounded-xl border cursor-pointer transition flex items-center justify-between ${isActive ? 'ring-2 ring-stone-800 bg-[#FAF7F2] border-stone-800' : 'bg-stone-50 hover:bg-stone-100 border-stone-200'}">
+        <div class="min-w-0">
+          <div class="text-[10px] font-bold text-stone-400 truncate">部位 ${idx + 1}：${partName} *</div>
+          <div class="text-xs font-bold text-stone-800 mt-0.5 truncate">${sel.code} ${sel.name}</div>
+        </div>
+        <span class="w-6 h-6 rounded-full shadow-inner border border-black/15 shrink-0 ml-1" style="background-color: ${sel.hex}"></span>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('step3-label').textContent = `Step 3. 點擊色球套用至「${currentProduct.parts[activePartIndex]}」`;
+  const activeCode = currentSelections[activePartIndex]?.code;
+
+  document.getElementById('palette-24-container').innerHTML = palette24.map(item => {
+    const isPicked = item.code === activeCode;
+    return `
+      <button onclick="pickColor('${item.code}')" class="group flex flex-col items-center focus:outline-none">
+        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-full yarn-ball transition-transform duration-150 group-hover:scale-110 flex items-center justify-center relative border border-black/10" style="background-color: ${item.hex}">
+          ${isPicked ? '<span class="bg-stone-900/85 text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full shadow">✓</span>' : ''}
+        </div>
+        <div class="mt-1 text-center leading-tight">
+          <span class="text-[10px] font-bold text-stone-400 num-font block">${item.code}</span>
+          <span class="text-[11px] font-bold text-stone-700">${item.name}</span>
+        </div>
+      </button>
+    `;
+  }).join('');
+
+  document.getElementById('palette-20-container').innerHTML = palette20.map(item => {
+    const isPicked = item.code === activeCode;
+    return `
+      <button onclick="pickColor('${item.code}')" class="p-2 rounded-xl shadow-sm border flex items-center gap-2 text-left transition ${isPicked ? 'ring-2 ring-stone-800 bg-amber-50/70 border-stone-800' : 'bg-white hover:bg-stone-50 border-stone-200'}">
+        <div class="w-9 h-9 rounded-lg yarn-swatch shrink-0 border border-black/10 flex items-center justify-center" style="background-color: ${item.hex}">
+          ${isPicked ? '<span class="bg-stone-900/85 text-white text-[9px] font-bold px-1 rounded-full">✓</span>' : ''}
+        </div>
+        <div class="min-w-0">
+          <div class="text-[10px] font-bold text-stone-400 num-font">${item.code}</div>
+          <div class="text-xs font-bold text-stone-800 truncate">${item.name}</div>
+        </div>
+      </button>
+    `;
+  }).join('');
+}
+
+function renderSvgStage() {
+  const c0 = currentSelections[0]?.hex || '#EFECE6';
+  const c1 = currentSelections[1]?.hex || '#DFCBB5';
+  const c2 = currentSelections[2]?.hex || '#F2E1B3';
+  const holder = document.getElementById('svg-canvas-holder');
+
+  if (currentProduct.shape === 'flower') {
+    let petals = '';
+    for (let i = 0; i < 12; i++) {
+      petals += `<g transform="rotate(${i * 30})"><ellipse cx="0" cy="-43" rx="13" ry="26" fill="${c1}" stroke="rgba(0,0,0,0.12)" stroke-width="1.5"/><line x1="0" y1="-24" x2="0" y2="-58" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-linecap="round"/></g>`;
+    }
+    holder.innerHTML = `
+      <svg viewBox="0 0 220 230" class="w-40 h-40 sm:w-44 sm:h-44 drop-shadow-md">
+        <path d="M110,12 C128,12 132,48 110,60 C88,48 92,12 110,12 Z" fill="none" stroke="${c0}" stroke-width="8" stroke-linecap="round" stroke-dasharray="4 2"/>
+        <circle cx="110" cy="130" r="80" fill="${c0}" stroke="rgba(0,0,0,0.12)" stroke-width="3"/>
+        <circle cx="110" cy="130" r="72" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-dasharray="6 4"/>
+        <g transform="translate(110, 130)">${petals}</g>
+        <circle cx="110" cy="130" r="23" fill="${c2}" stroke="rgba(0,0,0,0.15)" stroke-width="2"/>
+        <circle cx="110" cy="130" r="14" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-dasharray="3 3"/>
+      </svg>`;
+  } else if (currentProduct.shape === 'zongzi') {
+    holder.innerHTML = `
+      <svg viewBox="0 0 220 220" class="w-40 h-40 sm:w-44 sm:h-44 drop-shadow-md">
+        <path d="M125,38 C165,10 195,55 155,85 C135,98 130,60 125,38 Z" fill="none" stroke="${c0}" stroke-width="7" stroke-linecap="round" stroke-dasharray="5 2"/>
+        <polygon points="35,155 125,38 155,185" fill="${c1}" stroke="rgba(0,0,0,0.15)" stroke-width="2" stroke-linejoin="round"/>
+        <polygon points="75,98 125,38 155,185" fill="${c0}" stroke="rgba(0,0,0,0.15)" stroke-width="2" stroke-linejoin="round"/>
+        <line x1="75" y1="98" x2="155" y2="185" stroke="${c2}" stroke-width="8" stroke-linecap="round" stroke-dasharray="6 5"/>
+      </svg>`;
+  } else if (currentProduct.shape === 'bandana') {
+    holder.innerHTML = `
+      <svg viewBox="0 0 240 200" class="w-44 h-36 sm:w-48 sm:h-40 drop-shadow-md">
+        <path d="M25,115 Q10,165 45,180" fill="none" stroke="${c1}" stroke-width="6" stroke-linecap="round"/>
+        <path d="M215,115 Q230,165 195,180" fill="none" stroke="${c1}" stroke-width="6" stroke-linecap="round"/>
+        <polygon points="120,25 25,115 215,115" fill="${c0}" stroke="rgba(0,0,0,0.15)" stroke-width="2" stroke-linejoin="round"/>
+        <line x1="25" y1="115" x2="215" y2="115" stroke="${c1}" stroke-width="10" stroke-linecap="round" stroke-dasharray="8 6"/>
+        <line x1="120" y1="25" x2="25" y2="115" stroke="${c1}" stroke-width="7" stroke-linecap="round" stroke-dasharray="6 6"/>
+        <line x1="120" y1="25" x2="215" y2="115" stroke="${c1}" stroke-width="7" stroke-linecap="round" stroke-dasharray="6 6"/>
+      </svg>`;
+  } else {
+    holder.innerHTML = `
+      <svg viewBox="0 0 220 220" class="w-40 h-40 sm:w-44 sm:h-44 drop-shadow-md">
+        <circle cx="58" cy="62" r="26" fill="${c1}" stroke="rgba(0,0,0,0.15)" stroke-width="2"/>
+        <circle cx="162" cy="62" r="26" fill="${c1}" stroke="rgba(0,0,0,0.15)" stroke-width="2"/>
+        <circle cx="110" cy="118" r="68" fill="${c0}" stroke="rgba(0,0,0,0.15)" stroke-width="3"/>
+        <circle cx="110" cy="118" r="52" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2.5" stroke-dasharray="6 4"/>
+        <circle cx="110" cy="118" r="34" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2.5" stroke-dasharray="5 4"/>
+      </svg>`;
+  }
+
+  document.getElementById('svg-part-badges').innerHTML = currentProduct.parts.map((partName, idx) => {
+    const sel = currentSelections[idx];
+    const isAct = idx === activePartIndex && currentProduct.customizable;
+    return `
+      <span onclick="selectPart(${idx})" class="cursor-pointer text-[10px] font-bold text-stone-700 px-2 py-0.5 rounded-full shadow-sm border flex items-center gap-1 ${isAct ? 'ring-2 ring-stone-800 bg-white border-stone-800' : 'bg-white/85 border-stone-200'}">
+        <span class="w-2.5 h-2.5 rounded-full border border-black/15" style="background-color: ${sel.hex}"></span>
+        ${partName}：${ currentProduct.customizable ? (sel.code + ' ' + sel.name) : '固定配色' }
+      </span>
+    `;
+  }).join('');
+}
+
+function renderGalleryStage() {
+  const imgs = currentProduct.images || [];
+  document.getElementById('gallery-count-badge').textContent = imgs.length;
+  if (!imgs.length) return;
+  if (galleryIndex >= imgs.length) galleryIndex = 0;
+
+  document.getElementById('gallery-main-img').src = imgs[galleryIndex];
+  document.getElementById('gallery-thumbs').innerHTML = imgs.map((src, idx) => `
+    <img 
+      src="${src}" 
+      onclick="galleryIndex=${idx}; renderGalleryStage();" 
+      class="w-12 h-12 rounded-lg object-cover cursor-pointer border-2 shrink-0 transition ${idx === galleryIndex ? 'border-stone-900 scale-105 shadow' : 'border-transparent opacity-70 hover:opacity-100'}"
+    >
+  `).join('');
+}
+
+function changeQty(delta) {
+  currentQty = Math.max(1, currentQty + delta);
+  document.getElementById('qty-display').textContent = currentQty;
+}
+
+function getSelectionSummaryList() {
+  if (!currentProduct.customizable) {
+    return [{ partName: '款式配色', code: '固定配色', name: '依原樣式圖示製作', hex: '#A4AE77' }];
+  }
+  return currentProduct.parts.map((partName, idx) => ({
+    partName,
+    code: currentSelections[idx].code,
+    name: currentSelections[idx].name,
+    hex: currentSelections[idx].hex
+  }));
+}
+
+function addToCart() {
+  const noteEl = document.getElementById('item-note');
+  cart.push({
+    productId: currentProduct.id,
+    productName: currentProduct.name,
+    customizable: currentProduct.customizable,
+    price: currentProduct.price,
+    qty: currentQty,
+    note: noteEl.value.trim(),
+    selections: getSelectionSummaryList()
+  });
+  noteEl.value = '';
+  currentQty = 1;
+  document.getElementById('qty-display').textContent = 1;
+  document.getElementById('cart-badge').textContent = cart.length;
+  showToast(`✅ 已加入訂購車！`);
+}
+
+function removeCartItem(index) {
+  cart.splice(index, 1);
+  document.getElementById('cart-badge').textContent = cart.length;
+  renderCart();
+}
+
+function setShippingMethod(method) {
+  shippingMethod = method;
+  const isCvs = method === 'cvs';
+  document.getElementById('shipping-cvs-box').classList.toggle('modal-hidden', !isCvs);
+  document.getElementById('shipping-pickup-box').classList.toggle('modal-hidden', isCvs);
+
+  document.getElementById('ship-btn-cvs').className = isCvs
+    ? 'p-2.5 rounded-xl border text-left transition bg-stone-800 text-white border-stone-800 shadow-sm'
+    : 'p-2.5 rounded-xl border text-left transition bg-white text-stone-700 border-stone-300';
+  document.getElementById('ship-btn-pickup').className = !isCvs
+    ? 'p-2.5 rounded-xl border text-left transition bg-stone-800 text-white border-stone-800 shadow-sm'
+    : 'p-2.5 rounded-xl border text-left transition bg-white text-stone-700 border-stone-300';
+
+  renderCart();
+}
+
+function searchMapStore(brand) {
+  const input = document.getElementById('map-search-input');
+  input.value = `台灣 ${brand} 門市`;
+  updateGoogleMap();
+}
+
+function updateGoogleMap() {
+  const q = document.getElementById('map-search-input').value.trim() || '台灣 7-ELEVEN 門市';
+  const iframe = document.getElementById('google-map-iframe');
+  iframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(q)}&hl=zh-TW&z=15&output=embed`;
+}
+
+function renderCart() {
+  const container = document.getElementById('cart-items-container');
+  const checkoutSection = document.getElementById('cart-checkout-section');
+
+  if (cart.length === 0) {
+    container.innerHTML = `<div class="text-center py-12 text-stone-400 text-xs">目前訂購車還沒有商品喔！</div>`;
+    checkoutSection.classList.add('modal-hidden');
+    return;
+  }
+
+  checkoutSection.classList.remove('modal-hidden');
+  let subtotal = 0;
+
+  container.innerHTML = cart.map((item, idx) => {
+    const sub = item.price * item.qty;
+    subtotal += sub;
+    const selHtml = item.selections.map(s => `
+      <div class="text-[11px] text-stone-600 flex items-center gap-1.5">
+        <span class="w-2.5 h-2.5 rounded-full border border-black/15 inline-block" style="background-color: ${s.hex}"></span>
+        <span>${s.partName}：<strong>${s.code} ${s.name}</strong></span>
+      </div>
+    `).join('');
+
+    return `
+      <div class="bg-[#FAF7F2] p-3.5 rounded-2xl border border-stone-200 relative">
+        <button onclick="removeCartItem(${idx})" class="absolute top-2.5 right-3 text-xs text-stone-400 hover:text-red-600 font-bold">刪除</button>
+        <div class="font-bold text-xs sm:text-sm text-stone-800">${item.productName} <span class="text-amber-800 num-font">x ${item.qty}</span></div>
+        <div class="mt-1.5 space-y-0.5">${selHtml}</div>
+        ${item.note ? `<div class="text-[11px] text-amber-900 mt-1">備註：${item.note}</div>` : ''}
+        <div class="text-right text-xs font-bold num-font text-stone-700 mt-1">小計 NT$ ${sub}</div>
+      </div>
+    `;
+  }).join('');
+
+  const shipFee = shippingMethod === 'cvs' ? 60 : 0;
+  const grandTotal = subtotal + shipFee;
+
+  document.getElementById('summary-subtotal').textContent = `NT$ ${subtotal}`;
+  document.getElementById('summary-shipping-label').textContent = shippingMethod === 'cvs' ? '運費（超商取貨 +60元）' : '運費（自取面交 0元）';
+  document.getElementById('summary-shipping-fee').textContent = `NT$ ${shipFee}`;
+  document.getElementById('cart-total-amount').textContent = `NT$ ${grandTotal}`;
+}
+
+function copyTextSafe(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.left = '-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).catch(() => {});
+  }
+}
+
+function quickCopySingle() {
+  const note = document.getElementById('item-note').value.trim();
+  const selList = getSelectionSummaryList();
+  const partLines = selList.map(s => `  • ${s.partName}：${s.code} ${s.name}`).join('\n');
+  const text = `【Momhandmade. 客製化訂貨資訊】\n🧶 款式：${currentProduct.name}\n🎨 選色明細：\n${partLines}\n📦 數量：${currentQty} 件 (單價 NT$${currentProduct.price})\n📝 特殊需求備註：${note || '無'}`;
+  copyTextSafe(text);
+  showToast('📋 已複製訂貨資訊！');
+}
+
+function copyBankAccount() {
+  copyTextSafe(`${storeSettings.bankName} 帳號：${storeSettings.bankAccount}`);
+  showToast(`🏦 已複製匯款帳號：${storeSettings.bankAccount}`);
+}
+
+function submitOrder() {
+  const name = document.getElementById('customer-name').value.trim();
+  const phone = document.getElementById('customer-phone').value.trim();
+  const email = document.getElementById('customer-email').value.trim();
+  const last5 = document.getElementById('remit-last5').value.trim();
+
+  if (!name || !phone || !email || !last5) {
+    showToast('⚠️ 請完整填寫買家聯絡資訊與匯款後五碼！');
+    return;
+  }
+
+  let shippingDetail = '';
+  if (shippingMethod === 'cvs') {
+    const storeName = document.getElementById('cvs-store-name').value.trim();
+    const storeAddr = document.getElementById('cvs-store-address').value.trim();
+    if (!storeName || !storeAddr) {
+      showToast('⚠️ 請填寫超商店名與地址！');
+      return;
+    }
+    shippingDetail = `超商取貨(+60元)｜店名：${storeName}｜地址：${storeAddr}`;
+  } else {
+    const pickupLoc = document.getElementById('pickup-location-input').value.trim();
+    if (!pickupLoc) {
+      showToast('⚠️ 請填寫自取面交地點與時段！');
+      return;
+    }
+    shippingDetail = `自取面交(0元)｜地點/時段：${pickupLoc}`;
+  }
+
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const shipFee = shippingMethod === 'cvs' ? 60 : 0;
+  const total = subtotal + shipFee;
+
+  const newOrder = {
+    orderNo: 'MH' + Date.now().toString().slice(-6),
+    createdAt: new Date().toLocaleString('zh-TW'),
+    customerName: name,
+    customerPhone: phone,
+    customerEmail: email,
+    remitLast5: last5,
+    shippingMethod: shippingMethod === 'cvs' ? '超商取貨(+60元)' : '自取面交(0元)',
+    shippingDetail,
+    items: JSON.parse(JSON.stringify(cart)),
+    subtotal,
+    shipFee,
+    total,
+    status: '待確認匯款後五碼'
+  };
+
+  orders.unshift(newOrder);
+  saveAllToStorage();
+
+  cart = [];
+  document.getElementById('cart-badge').textContent = '0';
+  renderAll();
+  toggleCartDrawer(false);
+  showToast(`🎉 訂單 #${newOrder.orderNo} 已成功送達平台後台！`);
+}
+
+function submitBuyerMessage() {
+  const sender = document.getElementById('msg-sender-name').value.trim();
+  const phone = document.getElementById('msg-sender-phone').value.trim();
+  const email = document.getElementById('msg-sender-email').value.trim();
+  const content = document.getElementById('msg-content').value.trim();
+
+  if (!sender || !phone || !email || !content) {
+    showToast('⚠️ 請完整填寫稱呼、電話、信箱與留言內容！');
+    return;
+  }
+
+  buyerMessages.unshift({
+    id: Date.now(),
+    time: new Date().toLocaleString('zh-TW'),
+    sender,
+    phone,
+    email,
+    content,
+    reply: '',
+    replyTime: ''
+  });
+  saveAllToStorage();
+
+  document.getElementById('msg-content').value = '';
+  renderAll();
+  showToast('✅ 您的詢問已送達！');
+}
+
+function renderPublicMessageBoard() {
+  const boardEl = document.getElementById('public-message-board');
+  if (!boardEl) return;
+
+  if (buyerMessages.length === 0) {
+    boardEl.innerHTML = `<div class="text-center py-6 text-stone-400 text-xs bg-stone-50 rounded-xl border border-stone-200/70">目前尚無留言紀錄</div>`;
+    return;
+  }
+
+  boardEl.innerHTML = buyerMessages.map(m => `
+    <div class="bg-[#FAF7F2] p-3 rounded-xl border border-stone-200 text-xs space-y-1.5">
+      <div class="flex justify-between items-center">
+        <strong class="text-stone-800">👤 ${m.sender}</strong>
+        <span class="text-[10px] text-stone-400 num-font">${m.time}</span>
+      </div>
+      <p class="text-stone-700 leading-relaxed">${m.content}</p>
+      ${m.reply ? `
+        <div class="bg-amber-50 border border-amber-200/90 p-2.5 rounded-lg mt-1.5 text-amber-950">
+          <div class="font-bold text-[11px] flex justify-between">
+            <span>🧶 賣家回覆：</span>
+            <span class="text-[10px] text-stone-400 font-normal num-font">${m.replyTime || ''}</span>
+          </div>
+          <p class="mt-0.5">${m.reply}</p>
+        </div>
+      ` : `<div class="text-[10px] text-stone-400 italic">（等待賣家回覆中）</div>`}
+    </div>
+  `).join('');
+}
+
+function openSellerBackend() {
+  if (isAdminAuthenticated) {
+    openAdminDashboard();
+  } else {
+    document.getElementById('admin-password-input').value = '';
+    document.getElementById('login-error-msg').classList.add('modal-hidden');
+    document.getElementById('admin-login-modal').classList.remove('modal-hidden');
+  }
+}
+
+function closeAdminLogin() {
+  document.getElementById('admin-login-modal').classList.add('modal-hidden');
+}
+
+function verifyAdminLogin() {
+  const input = document.getElementById('admin-password-input').value.trim();
+  const errEl = document.getElementById('login-error-msg');
+
+  if (input === storeSettings.adminPwd) {
+    isAdminAuthenticated = true;
+    closeAdminLogin();
+    openAdminDashboard();
+    showToast('🔓 成功登入賣家後台');
+  } else {
+    errEl.textContent = '❌ 密碼錯誤！須包含英文＋數字＋符號。';
+    errEl.classList.remove('modal-hidden');
+  }
+}
+
+function logoutAdmin() {
+  isAdminAuthenticated = false;
+  closeAdminDashboard();
+  showToast('🔒 已安全登出後台');
+}
+
+function openAdminDashboard() {
+  document.getElementById('admin-dashboard-modal').classList.remove('modal-hidden');
+  switchAdminTab('orders');
+}
+
+function closeAdminDashboard() {
+  document.getElementById('admin-dashboard-modal').classList.add('modal-hidden');
+}
+
+function switchAdminTab(tab) {
+  ['orders', 'messages', 'products', 'settings', 'github'].forEach(t => {
+    const panel = document.getElementById(`admin-panel-${t}`);
+    const btn = document.getElementById(`admin-tab-${t}`);
+    if (panel) panel.classList.toggle('modal-hidden', t !== tab);
+    if (btn) {
+      btn.className = t === tab
+        ? 'px-3.5 py-1.5 rounded-xl text-xs font-bold bg-stone-800 text-white shrink-0'
+        : (t === 'github'
+            ? 'px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-100 text-amber-950 shrink-0'
+            : 'px-3.5 py-1.5 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 shrink-0');
+    }
+  });
+  renderAdminAll();
+}
+
+function renderAdminAll() {
+  document.getElementById('admin-order-count').textContent = orders.length;
+  document.getElementById('admin-msg-count').textContent = buyerMessages.length;
+  renderAdminOrders();
+  renderAdminMessages();
+  renderAdminProducts();
+
+  document.getElementById('set-bank-name').value = storeSettings.bankName;
+  document.getElementById('set-bank-account').value = storeSettings.bankAccount;
+  document.getElementById('set-bank-owner').value = storeSettings.bankOwner;
+  document.getElementById('set-admin-pwd').value = storeSettings.adminPwd;
+
+  const tokenEl = document.getElementById('github-token-input');
+  const gistEl = document.getElementById('github-gist-input');
+  if (tokenEl) tokenEl.value = storeSettings.githubToken || '';
+  if (gistEl) gistEl.value = storeSettings.githubGistId || '';
+}
+
+function renderAdminOrders() {
+  const container = document.getElementById('admin-panel-orders');
+  if (orders.length === 0) {
+    container.innerHTML = `<div class="bg-white p-10 rounded-2xl text-center text-stone-400 text-xs border border-stone-200">目前尚無訂單。</div>`;
+    return;
+  }
+
+  container.innerHTML = orders.map((o, idx) => {
+    const emailAddr = o.customerEmail || '未填寫';
+    const itemsHtml = o.items.map(item => {
+      const selStr = item.selections.map(s => `<span class="inline-flex items-center gap-1 bg-stone-100 px-2 py-0.5 rounded text-[11px]"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:${s.hex}"></span>${s.partName}:${s.code}${s.name}</span>`).join(' ');
+      return `
+        <div class="border-b border-stone-100 py-1.5 text-xs flex flex-wrap justify-between items-center gap-2">
+          <div>
+            <strong>${item.productName}</strong> <span class="text-amber-800 font-bold">x${item.qty}</span>
+            <div class="flex flex-wrap gap-1 mt-1">${selStr}</div>
+            ${item.note ? `<div class="text-[11px] text-amber-800 mt-0.5">備註：${item.note}</div>` : ''}
+          </div>
+          <div class="num-font font-bold">NT$ ${item.price * item.qty}</div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm space-y-2.5">
+        <div class="flex flex-wrap justify-between items-center gap-2 border-b border-stone-200 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="bg-stone-900 text-white text-xs font-bold px-2.5 py-0.5 rounded-lg num-font">#${o.orderNo}</span>
+            <span class="text-xs text-stone-500">${o.createdAt}</span>
+            <span class="bg-amber-100 text-amber-900 text-xs font-bold px-2.5 py-0.5 rounded-full border border-amber-300">後五碼：${o.remitLast5}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <select onchange="updateOrderStatus(${idx}, this.value)" class="text-xs border border-stone-300 rounded-lg px-2 py-1 font-bold bg-stone-50">
+              <option value="待確認匯款後五碼" ${o.status==='待確認匯款後五碼'?'selected':''}>⏳ 待確認匯款後五碼</option>
+              <option value="已確認匯款・編織作業中" ${o.status==='已確認匯款・編織作業中'?'selected':''}>🧶 已確認匯款・編織作業中</option>
+              <option value="已寄出 / 待面交" ${o.status==='已寄出 / 待面交'?'selected':''}>🚚 已寄出 / 待面交</option>
+              <option value="訂單已完成" ${o.status==='訂單已完成'?'selected':''}>✅ 訂單已完成</option>
+            </select>
+            <button onclick="orders.splice(${idx},1); saveAllToStorage(); renderAdminAll(); renderAll();" class="text-xs text-red-600 font-bold px-2">刪除</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs bg-[#FAF7F2] p-3 rounded-xl border border-stone-200/70">
+          <div>👤 買家：<strong>${o.customerName}</strong></div>
+          <div>📞 電話：<strong class="num-font text-stone-900">${o.customerPhone}</strong></div>
+          <div>✉️ 信箱：<strong class="num-font text-stone-900">${emailAddr}</strong></div>
+        </div>
+
+        <div class="text-xs bg-stone-50 px-3 py-2 rounded-xl border border-stone-200/60">
+          🚚 取貨資訊：<strong>${o.shippingDetail}</strong>
+        </div>
+
+        <div class="space-y-1">${itemsHtml}</div>
+
+        <div class="flex justify-between items-center pt-1 text-xs font-bold">
+          <span class="text-stone-500">狀態：${o.status}</span>
+          <span class="text-sm text-amber-900 num-font">總計：NT$ ${o.total}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateOrderStatus(idx, newStatus) {
+  orders[idx].status = newStatus;
+  saveAllToStorage();
+  renderAdminOrders();
+  showToast('已更新訂單狀態');
+}
+
+function renderAdminMessages() {
+  const container = document.getElementById('admin-panel-messages');
+  if (buyerMessages.length === 0) {
+    container.innerHTML = `<div class="bg-white p-10 rounded-2xl text-center text-stone-400 text-xs border border-stone-200">目前尚無留言。</div>`;
+    return;
+  }
+
+  container.innerHTML = buyerMessages.map((m, idx) => `
+    <div class="bg-white p-4 rounded-2xl border border-stone-200 space-y-3">
+      <div class="flex flex-wrap justify-between items-start gap-2 border-b border-stone-100 pb-2 text-xs">
+        <div>
+          <strong class="text-sm text-stone-800">👤 ${m.sender}</strong>
+          <span class="ml-2 font-bold num-font">📞 ${m.phone} | ✉️ ${m.email}</span>
+        </div>
+        <button onclick="buyerMessages.splice(${idx},1); saveAllToStorage(); renderAdminAll(); renderAll();" class="text-xs text-red-600 font-bold">刪除</button>
+      </div>
+      <p class="text-xs text-stone-700 bg-[#FAF7F2] p-3 rounded-xl border border-stone-200/60">${m.content}</p>
+      <div class="flex gap-2">
+        <input id="reply-input-${idx}" type="text" value="${m.reply || ''}" placeholder="輸入回覆..." class="flex-1 text-xs bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
+        <button onclick="replyBuyerMessage(${idx})" class="bg-stone-800 text-white text-xs font-bold px-4 py-2 rounded-xl">回覆</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function replyBuyerMessage(idx) {
+  const inputEl = document.getElementById(`reply-input-${idx}`);
+  if (!inputEl) return;
+  buyerMessages[idx].reply = inputEl.value.trim();
+  buyerMessages[idx].replyTime = new Date().toLocaleString('zh-TW');
+  saveAllToStorage();
+  renderAdminMessages();
+  renderPublicMessageBoard();
+  showToast('✅ 已回覆留言');
+}
+
+function renderAdminProducts() {
+  const container = document.getElementById('admin-products-list-container');
+  container.innerHTML = products.map((p, index) => `
+    <div class="bg-white p-4 rounded-2xl border border-stone-200 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+      <div class="space-y-1.5">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xl">${p.icon}</span>
+          <strong class="text-sm text-stone-800">${p.name}</strong>
+          <span class="num-font text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200 px-2 py-0.5 rounded-lg">NT$ ${p.price}</span>
+        </div>
+        <div class="text-xs text-stone-500">圖示數量：<strong>${(p.images || []).length} 張</strong></div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+        <div class="flex items-center gap-1.5 bg-stone-50 border border-stone-200 px-2.5 py-1 rounded-xl">
+          <span class="text-xs font-bold text-stone-600">NT$</span>
+          <input id="admin-price-${p.id}" type="number" min="0" value="${p.price}" class="w-20 text-xs font-bold num-font bg-white border border-stone-300 rounded-lg px-2 py-1">
+          <button onclick="updateProductPrice(${p.id})" class="bg-stone-800 text-white text-xs font-bold px-2.5 py-1 rounded-lg">改價</button>
+        </div>
+        <button onclick="toggleProductCustomizable(${p.id})" class="px-3 py-1.5 rounded-xl text-xs font-bold transition ${p.customizable ? 'bg-emerald-600 text-white' : 'bg-stone-200 text-stone-700'}">
+          ${p.customizable ? '🎨 選色中' : '🔒 固定配色'}
+        </button>
+        <button onclick="deleteProduct(${p.id})" class="bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl">刪除商品</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateProductPrice(prodId) {
+  const prod = products.find(p => p.id === prodId);
+  const inputEl = document.getElementById(`admin-price-${prodId}`);
+  if (!prod || !inputEl) return;
+  prod.price = parseInt(inputEl.value, 10) || 0;
+  saveAllToStorage();
+  renderAdminProducts();
+  renderAll();
+  showToast('✅ 價格已更新');
+}
+
+function toggleProductCustomizable(prodId) {
+  const prod = products.find(p => p.id === prodId);
+  if (!prod) return;
+  prod.customizable = !prod.customizable;
+  saveAllToStorage();
+  renderAdminProducts();
+  renderAll();
+  showToast('選色狀態已更新');
+}
+
+function deleteProduct(prodId) {
+  if (products.length <= 1) {
+    showToast('⚠️ 至少需保留一項商品！');
+    return;
+  }
+  products = products.filter(p => p.id !== prodId);
+  currentProduct = products[0];
+  saveAllToStorage();
+  renderAdminProducts();
+  renderAll();
+  showToast('已刪除商品');
+}
+
+function saveStoreSettings() {
+  storeSettings.bankName = document.getElementById('set-bank-name').value.trim();
+  storeSettings.bankAccount = document.getElementById('set-bank-account').value.trim();
+  storeSettings.bankOwner = document.getElementById('set-bank-owner').value.trim();
+  storeSettings.adminPwd = document.getElementById('set-admin-pwd').value.trim();
+  saveAllToStorage();
+  renderAll();
+  showToast('✅ 設定已儲存');
+}
+
+function downloadFullSiteHtml() {
+  let htmlContent = document.documentElement.outerHTML;
+  const blob = new Blob(['<!DOCTYPE html>\n' + htmlContent], { type: 'text/html;charset=utf-8' });
+  const link = document.createElement('a');
+  link.download = 'index.html';
+  link.href = URL.createObjectURL(blob);
+  link.click();
+  showToast('📥 網頁檔案下載成功！');
+}
+
+async function saveAndInitGitHubSync() {
+  storeSettings.githubToken = document.getElementById('github-token-input').value.trim();
+  storeSettings.githubGistId = document.getElementById('github-gist-input').value.trim();
+  saveAllToStorage();
+  showToast('✅ GitHub 設定已儲存');
+}
+
+async function syncToGitHubGist(notify = false) {}
+async function syncFromGitHubGist(notify = false) {}
+
+function toggleColorModal(show) {
+  document.getElementById('color-modal').classList.toggle('modal-hidden', !show);
+}
+
+function toggleCartDrawer(show) {
+  renderCart();
+  document.getElementById('cart-drawer').classList.toggle('modal-hidden', !show);
+}
+
+function toggleContactModal(show) {
+  document.getElementById('contact-modal').classList.toggle('modal-hidden', !show);
+}
+
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('global-toast');
+  el.textContent = msg;
+  el.classList.remove('modal-hidden');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.add('modal-hidden'), 4200);
+}
+
+function initExportGrids() {
+  document.getElementById('export-24-grid').innerHTML = palette24.map(item => `
+    <div class="flex flex-col items-center">
+      <div class="w-14 h-14 rounded-full yarn-ball border border-black/10" style="background-color: ${item.hex}"></div>
+      <div class="text-[11px] font-bold text-stone-400 num-font mt-1.5">${item.code}</div>
+      <div class="text-xs font-bold text-stone-800">${item.name}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('export-20-grid').innerHTML = palette20.map(item => `
+    <div class="bg-white p-2.5 rounded-2xl border border-stone-200 flex items-center gap-2.5">
+      <div class="w-10 h-10 rounded-xl yarn-swatch shrink-0 border border-black/10" style="background-color: ${item.hex}"></div>
+      <div>
+        <div class="text-[11px] font-bold text-stone-400 num-font">${item.code}</div>
+        <div class="text-xs font-bold text-stone-800">${item.name}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function exportChart(elId, filename) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#FAF7F2' });
+  const link = document.createElement('a');
+  link.download = filename;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  initExportGrids();
+  selectProduct(products[0].id);
+});
+</script>
+
+</body></html>
