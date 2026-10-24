@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-TW"><head>
+<html lang="zh-TW">
+<head>
   <meta charset="UTF-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -19,9 +20,11 @@
     .num-font {
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
+    /* 強制隱藏彈窗機制，確保開啟時絕不卡死 */
     .modal-hidden {
       display: none !important;
     }
+    /* 24色擬真毛線球立體紋理 */
     .yarn-ball {
       background-image: 
         radial-gradient(circle at 30% 28%, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 50%),
@@ -29,12 +32,14 @@
         repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.08) 0px, rgba(0,0,0,0.08) 2px, transparent 4px);
       box-shadow: 0 4px 10px -2px rgba(60, 45, 35, 0.18), inset 0 2px 4px rgba(255,255,255,0.5);
     }
+    /* 20色粗毛線斜紋質感 */
     .yarn-swatch {
       background-image: 
         linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(0,0,0,0.2) 100%),
         repeating-linear-gradient(45deg, rgba(255,255,255,0.09) 0px, rgba(255,255,255,0.09) 3px, rgba(0,0,0,0.09) 3px, rgba(0,0,0,0.09) 6px);
       box-shadow: 0 3px 8px rgba(60, 45, 35, 0.12), inset 0 1px 3px rgba(255,255,255,0.4);
     }
+    /* 細緻捲軸與隱藏捲軸工具 */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     .thin-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -44,26 +49,35 @@
 <body class="h-screen w-screen overflow-hidden flex flex-col select-none">
 
   <!-- ========================================================= -->
-  <!-- 頂部導覽列 -->
+  <!-- 頂部導覽列 (固定高度，適配手機/平板/電腦一頁式瀏覽) -->
   <!-- ========================================================= -->
   <header class="shrink-0 bg-[#F7F4EF]/95 backdrop-blur-md border-b border-stone-200/90 px-3 sm:px-6 py-2.5 z-30">
     <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <!-- 品牌標誌 -->
       <div class="flex items-center gap-2">
         <span class="text-lg sm:text-2xl font-bold tracking-wider text-stone-800 italic">Momhandmade.</span>
         <span class="hidden md:inline-block text-[11px] bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-full font-bold">手作編織・客製選色工坊</span>
       </div>
 
+      <!-- 右側功能按鈕群 -->
       <div class="flex items-center gap-1.5 sm:gap-2">
+        <!-- 留言板詢問 / 匯款資訊 -->
         <button onclick="toggleContactModal(true)" class="text-[11px] sm:text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 px-2.5 sm:px-3 py-1.5 rounded-xl transition flex items-center gap-1">
           <span>💬 留言板詢問 / 匯款資訊</span>
         </button>
+
+        <!-- 色卡總覽 -->
         <button onclick="toggleColorModal(true)" class="text-[11px] sm:text-xs font-bold bg-white hover:bg-stone-100 text-stone-700 border border-stone-300 px-2.5 sm:px-3 py-1.5 rounded-xl shadow-sm transition hidden sm:flex items-center gap-1">
           <span>🎨 色卡下載</span>
         </button>
+
+        <!-- 訂購車清單按鈕 -->
         <button onclick="toggleCartDrawer(true)" class="text-[11px] sm:text-xs font-bold bg-stone-800 hover:bg-stone-700 text-white px-3 sm:px-4 py-1.5 rounded-xl shadow-sm transition flex items-center gap-1.5">
           <span>🛒 訂購車</span>
           <span id="cart-badge" class="num-font bg-amber-400 text-stone-950 px-1.5 py-0.2 rounded-full text-[11px] font-extrabold">0</span>
         </button>
+
+        <!-- 賣家後台按鈕 (需密碼登入) -->
         <button onclick="openSellerBackend()" class="text-[11px] sm:text-xs font-bold bg-stone-200/80 hover:bg-stone-300 text-stone-700 px-2.5 py-1.5 rounded-xl transition flex items-center gap-1" title="賣家專屬管理後台">
           <span>🔒 後台</span>
           <span id="admin-unread-badge" class="modal-hidden w-2 h-2 rounded-full bg-red-500"></span>
@@ -73,7 +87,7 @@
   </header>
 
   <!-- ========================================================= -->
-  <!-- STEP 1：橫向商品選擇列 -->
+  <!-- STEP 1：橫向商品選擇列 (精簡固定於上方，支援觸控滑動) -->
   <!-- ========================================================= -->
   <section class="shrink-0 bg-white/70 border-b border-stone-200/70 px-3 sm:px-6 py-2">
     <div class="max-w-7xl mx-auto">
@@ -86,13 +100,17 @@
   </section>
 
   <!-- ========================================================= -->
-  <!-- 主工作區：自適應雙欄佈局 -->
+  <!-- 主工作區：一頁式自適應雙欄佈局 (手機/平板/電腦皆可一頁操作) -->
   <!-- ========================================================= -->
   <main class="flex-1 overflow-y-auto lg:overflow-hidden px-3 sm:px-6 py-3">
     <div class="max-w-7xl mx-auto h-full grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
 
-      <!-- 左欄 -->
+      <!-- ===================================================== -->
+      <!-- 左欄 (佔 5 欄)：配色即時圖示 ＋ 多張原樣式圖庫展示與新增 ＋ 下單操作 -->
+      <!-- ===================================================== -->
       <div class="lg:col-span-5 bg-white rounded-2xl p-3.5 sm:p-4 shadow-sm border border-stone-200/90 flex flex-col justify-between lg:h-full lg:overflow-y-auto thin-scroll space-y-3">
+        
+        <!-- 頂部：切換「配色模擬圖」與「實品樣式圖庫 (支援多圖新增)」 -->
         <div class="flex flex-wrap justify-between items-center gap-2 border-b border-stone-100 pb-2">
           <div class="inline-flex bg-stone-100 p-1 rounded-xl">
             <button id="btn-tab-svg" onclick="switchStageTab('svg')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition bg-white text-stone-900 shadow-sm">
@@ -103,21 +121,28 @@
               <span id="gallery-count-badge" class="num-font bg-amber-100 text-amber-900 px-1.5 rounded-full text-[10px]">1</span>
             </button>
           </div>
+
+          <!-- 不限數量新增多個樣式圖示按鈕 -->
           <label class="cursor-pointer text-[11px] font-bold text-amber-900 bg-amber-50 hover:bg-amber-100 px-2.5 py-1 rounded-lg border border-amber-200 transition flex items-center gap-1">
             <span>＋ 新增樣式圖示(可多選)</span>
             <input type="file" accept="image/*" multiple onchange="handleAddStyleImages(event)" class="hidden">
           </label>
         </div>
 
+        <!-- 舞台顯示區 -->
         <div class="bg-gradient-to-b from-[#FAF7F2] to-[#EFECE6] rounded-2xl p-3 relative flex flex-col items-center justify-center min-h-[220px] sm:min-h-[250px] border border-stone-200/60">
           <div class="absolute top-2.5 right-3 text-[11px] italic text-stone-400">Momhandmade.</div>
+          
+          <!-- 商品能否選色狀態標籤 -->
           <div id="customizable-status-pill" class="absolute top-2.5 left-3"></div>
 
+          <!-- 分頁 A：SVG 擬真編織部位配色預覽 -->
           <div id="stage-tab-svg" class="w-full flex flex-col items-center justify-center pt-4">
             <div id="svg-canvas-holder" class="flex items-center justify-center"></div>
             <div id="svg-part-badges" class="flex flex-wrap justify-center gap-1 mt-2"></div>
           </div>
 
+          <!-- 分頁 B：原本樣式圖示多圖展示櫃 (支援無限新增、左右切換、點擊放大) -->
           <div id="stage-tab-gallery" class="modal-hidden w-full flex flex-col items-center justify-between pt-4">
             <div class="relative w-full h-44 sm:h-48 flex items-center justify-center bg-white/70 rounded-xl overflow-hidden border border-stone-200/80">
               <img id="gallery-main-img" src="" alt="商品原本樣式圖示" class="max-h-full max-w-full object-contain cursor-zoom-in" onclick="openLightbox()">
@@ -129,6 +154,7 @@
           </div>
         </div>
 
+        <!-- 選色後必備提示詞警語框 -->
         <div id="selection-warning-box" class="bg-amber-50/90 border border-amber-300/90 rounded-xl px-3 py-2 text-[11px] sm:text-xs text-amber-950 leading-relaxed shadow-sm">
           <div class="font-bold flex items-center gap-1 text-amber-900">
             <span>⚠️ 訂製與選色重要提醒：</span>
@@ -138,6 +164,7 @@
           </p>
         </div>
 
+        <!-- 商品金額、數量與加入訂購車操作 -->
         <div class="space-y-2 pt-1 border-t border-stone-100">
           <div class="flex items-center justify-between">
             <div>
@@ -162,12 +189,17 @@
             </button>
           </div>
         </div>
+
       </div>
 
-      <!-- 右欄 -->
+      <!-- ===================================================== -->
+      <!-- 右欄 (佔 7 欄)：部位切換器 ＆ 雙色卡選色面板 / 無法選色提示 -->
+      <!-- ===================================================== -->
       <div class="lg:col-span-7 bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-stone-200/90 flex flex-col justify-between lg:h-full lg:overflow-y-auto thin-scroll space-y-4">
         
-        <div id="customizable-panel" class="space-y-4 modal-hidden">
+        <!-- 狀態 A：此商品「可自選配色」 -->
+        <div id="customizable-panel" class="space-y-4">
+          <!-- STEP 2：選擇要換色的部位 -->
           <div>
             <div class="flex justify-between items-center mb-2">
               <label class="text-xs font-bold uppercase tracking-wider text-stone-500">
@@ -178,6 +210,7 @@
             <div id="part-selector-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5"></div>
           </div>
 
+          <!-- STEP 3：切換色卡類別 (24色毛線球 vs 20色粗毛線) -->
           <div class="border-t border-stone-100 pt-3">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
               <label id="step3-label" class="text-xs font-bold text-stone-700">Step 3. 點擊色球套用至指定部位</label>
@@ -191,12 +224,16 @@
               </div>
             </div>
 
+            <!-- 面板 A：24 色毛線球 -->
             <div id="palette-24-container" class="grid grid-cols-4 sm:grid-cols-6 gap-y-3.5 gap-x-2 bg-[#FAF7F2] p-3.5 rounded-2xl border border-stone-200"></div>
+
+            <!-- 面板 B：20 色粗毛線 -->
             <div id="palette-20-container" class="modal-hidden grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-[#FAF7F2] p-3.5 rounded-2xl border border-stone-200"></div>
           </div>
         </div>
 
-        <div id="non-customizable-panel" class="my-auto py-8 px-4 text-center space-y-4 bg-[#FAF7F2] rounded-2xl border-2 border-dashed border-stone-300 modal-hidden">
+        <!-- 狀態 B：此商品「無法選色 (固定配色款式)」專屬提示面板 -->
+        <div id="non-customizable-panel" class="modal-hidden my-auto py-8 px-4 text-center space-y-4 bg-[#FAF7F2] rounded-2xl border-2 border-dashed border-stone-300">
           <div class="w-14 h-14 mx-auto rounded-full bg-amber-100 text-amber-800 flex items-center justify-center text-2xl shadow-sm">
             🧶
           </div>
@@ -218,6 +255,7 @@
           </div>
         </div>
 
+        <!-- 右欄底部：留言板詢問與匯款須知橫幅 -->
         <div class="bg-stone-50 border border-stone-200/90 rounded-xl p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
           <div class="space-y-0.5">
             <div class="font-bold text-stone-800 flex items-center gap-1.5">
@@ -243,13 +281,18 @@
     </div>
   </main>
 
-  <!-- Toast -->
-  <div id="global-toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-stone-900/95 text-white px-4 py-3 rounded-2xl shadow-2xl border border-stone-700 max-w-md w-[92%] text-xs leading-relaxed text-center transition-all modal-hidden"></div>
+  <!-- ========================================================= -->
+  <!-- 全域浮動吐司提示 -->
+  <!-- ========================================================= -->
+  <div id="global-toast" class="modal-hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-stone-900/95 text-white px-4 py-3 rounded-2xl shadow-2xl border border-stone-700 max-w-md w-[92%] text-xs leading-relaxed text-center transition-all"></div>
 
-  <!-- 彈窗 1：訂購車結帳 -->
+  <!-- ========================================================= -->
+  <!-- 彈窗 1：訂購車結帳 ＋ 超商取貨(+60含Google地圖)/自取(0元) ＋ 匯款後五碼 -->
+  <!-- ========================================================= -->
   <div id="cart-drawer" class="modal-hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-end" onclick="if(event.target === this) toggleCartDrawer(false)">
     <div class="bg-white w-full max-w-lg h-full p-5 sm:p-6 flex flex-col justify-between shadow-2xl overflow-y-auto thin-scroll">
       <div class="space-y-4">
+        <!-- 標題 -->
         <div class="flex justify-between items-center border-b border-stone-200 pb-3 sticky top-0 bg-white z-10">
           <div>
             <h3 class="text-base sm:text-lg font-bold text-stone-800">🛒 您的客製化訂購車</h3>
@@ -258,9 +301,13 @@
           <button onclick="toggleCartDrawer(false)" class="text-stone-400 hover:text-stone-800 text-xl font-bold px-2">✕</button>
         </div>
 
+        <!-- 訂購項目清單 -->
         <div id="cart-items-container" class="space-y-2.5"></div>
 
+        <!-- 結帳表單區 (當購物車有商品時顯示) -->
         <div id="cart-checkout-section" class="modal-hidden space-y-4 border-t border-stone-200 pt-4">
+          
+          <!-- 1. 配送方式選擇：超商取貨(+60元) vs 自取(0元) -->
           <div class="bg-[#FAF7F2] p-3.5 rounded-2xl border border-stone-200 space-y-3">
             <label class="block text-xs font-bold text-stone-800">1. 選擇取貨方式 *</label>
             <div class="grid grid-cols-2 gap-2">
@@ -274,6 +321,7 @@
               </button>
             </div>
 
+            <!-- 超商取貨：內嵌 Google 地圖查詢店名與地址 -->
             <div id="shipping-cvs-box" class="space-y-2.5 pt-1">
               <div class="flex flex-wrap items-center justify-between gap-1">
                 <span class="text-[11px] font-bold text-stone-600">📍 Google 地圖查詢超商店名與地址：</span>
@@ -283,11 +331,13 @@
                 </div>
               </div>
 
+              <!-- 關鍵字搜尋超商定位 -->
               <div class="flex gap-1.5">
                 <input id="map-search-input" type="text" placeholder="輸入縣市路名查詢超商（例：台中市西屯區 7-11）" class="flex-1 text-xs bg-white border border-stone-300 rounded-xl px-3 py-1.5">
                 <button onclick="updateGoogleMap()" class="bg-stone-700 hover:bg-stone-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shrink-0">查詢地圖</button>
               </div>
 
+              <!-- Google Maps 內嵌地圖 -->
               <div class="w-full h-44 rounded-xl overflow-hidden border border-stone-300 bg-stone-100 relative">
                 <iframe id="google-map-iframe" class="w-full h-full border-0" loading="lazy" allowfullscreen src="https://maps.google.com/maps?q=台灣+7-ELEVEN+便利商店&hl=zh-TW&z=14&output=embed">
                 </iframe>
@@ -300,12 +350,14 @@
               </div>
             </div>
 
+            <!-- 自取面交：填寫買家方便面交地點與時段 -->
             <div id="shipping-pickup-box" class="modal-hidden space-y-2 pt-1">
               <p class="text-[11px] text-amber-900 font-semibold">🤝 自取免運費（NT$ 0），地點與時間以買家方便面交為主：</p>
               <input id="pickup-location-input" type="text" placeholder="請輸入您方便面交的地點與時段 * (例：捷運站出口 / 週末下午)" class="w-full text-xs bg-white border border-stone-300 rounded-xl px-3 py-2">
             </div>
           </div>
 
+          <!-- 2. 匯款帳號顯示與回報後五碼 -->
           <div class="bg-amber-50/80 p-3.5 rounded-2xl border border-amber-200 space-y-2">
             <div class="flex justify-between items-center">
               <label class="text-xs font-bold text-amber-950">2. 匯款資訊與回報帳號後五碼 *</label>
@@ -320,6 +372,7 @@
             <input id="remit-last5" type="text" maxlength="10" placeholder="請輸入您的匯款帳號後五碼 * (若剛下單尚未匯款可填「待補」)" class="w-full text-xs bg-white border border-amber-300 rounded-xl px-3 py-2 font-bold">
           </div>
 
+          <!-- 3. 買家聯絡資料 (電話與信箱供賣家回覆) -->
           <div class="space-y-2">
             <label class="block text-xs font-bold text-stone-800">3. 買家訂購聯絡資訊（供賣家核對訂單與回覆通知） *</label>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -329,6 +382,7 @@
             <input id="customer-email" type="email" placeholder="聯絡電子信箱 Email * (供賣家回覆確認訂單與出貨通知)" class="w-full text-xs bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
           </div>
 
+          <!-- 金額明細總計 -->
           <div class="bg-stone-100 p-3.5 rounded-2xl space-y-1 text-xs">
             <div class="flex justify-between text-stone-600">
               <span>商品小計</span>
@@ -344,21 +398,25 @@
             </div>
           </div>
 
+          <!-- 送出訂單至平台後台 ＆ 自動寄信通知賣家 -->
           <div class="space-y-2 pt-1">
-            <button onclick="submitOrder()" class="w-full bg-stone-900 hover:bg-stone-800 text-white font-bold py-3.5 rounded-xl text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-1.5">
-              <span>✅ 送出訂單至平台後台 ＆ 自動複製訂貨資訊</span>
+            <button id="submit-order-btn" onclick="submitOrder()" class="w-full bg-stone-900 hover:bg-stone-800 text-white font-bold py-3.5 rounded-xl text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-1.5">
+              <span>✅ 送出訂單（自動通知賣家 ＆ 複製訂貨資訊）</span>
             </button>
             <button onclick="toggleCartDrawer(false); toggleContactModal(true);" class="w-full bg-emerald-700 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs transition">
               💬 有疑問？前往買家留言板詢問賣家
             </button>
           </div>
+
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 彈窗 2：買家詢問留言板 -->
-  <div id="contact-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 modal-hidden" onclick="if(event.target === this) toggleContactModal(false)">
+  <!-- ========================================================= -->
+  <!-- 彈窗 2：買家詢問留言板 ＆ 匯款須知 -->
+  <!-- ========================================================= -->
+  <div id="contact-modal" class="modal-hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onclick="if(event.target === this) toggleContactModal(false)">
     <div class="bg-white rounded-3xl max-w-xl w-full p-6 space-y-5 shadow-2xl max-h-[92vh] overflow-y-auto thin-scroll">
       <div class="flex justify-between items-center border-b border-stone-200 pb-3">
         <div>
@@ -368,6 +426,7 @@
         <button onclick="toggleContactModal(false)" class="text-stone-400 hover:text-stone-800 text-xl font-bold px-2">✕</button>
       </div>
 
+      <!-- 匯款資訊區 -->
       <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 space-y-1.5 text-xs">
         <div class="font-bold text-amber-950 flex justify-between items-center">
           <span>🏦 專屬匯款帳戶（匯款後請回報帳號後五碼，確認後開始作業）</span>
@@ -376,6 +435,7 @@
         <div id="contact-bank-info" class="text-stone-700 space-y-0.5 pt-1"></div>
       </div>
 
+      <!-- 平台直接留言給賣家 -->
       <div class="border-t border-stone-200 pt-4 space-y-3">
         <h4 class="text-xs font-bold text-stone-800">📩 線上留言詢問（賣家可於後台查閱，並透過電話、信箱或於下方留言板直接回覆）</h4>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -389,6 +449,7 @@
         </button>
       </div>
 
+      <!-- 留言板歷史問答顯示區 -->
       <div class="border-t border-stone-200 pt-4 space-y-2.5">
         <div class="flex justify-between items-center">
           <h4 class="text-xs font-bold text-stone-700">📋 留言板問答紀錄</h4>
@@ -399,8 +460,10 @@
     </div>
   </div>
 
+  <!-- ========================================================= -->
   <!-- 彈窗 3：賣家後台密碼登入視窗 -->
-  <div id="admin-login-modal" class="fixed inset-0 z-50 bg-black/65 backdrop-blur-sm flex items-center justify-center p-4 modal-hidden" onclick="if(event.target === this) closeAdminLogin()">
+  <!-- ========================================================= -->
+  <div id="admin-login-modal" class="modal-hidden fixed inset-0 z-50 bg-black/65 backdrop-blur-sm flex items-center justify-center p-4" onclick="if(event.target === this) closeAdminLogin()">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
       <div class="flex justify-between items-center border-b border-stone-200 pb-3">
         <div>
@@ -415,7 +478,7 @@
       </p>
 
       <div class="space-y-2">
-        <input id="admin-password-input" type="text" placeholder="請輸入賣家後台密碼 (預設: Mom@2026!)" onkeydown="if(event.key==='Enter') verifyAdminLogin()" class="w-full text-xs bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-stone-800 num-font">
+        <input id="admin-password-input" type="password" placeholder="請輸入賣家後台密碼 (預設: Mom@2026!)" onkeydown="if(event.key==='Enter') verifyAdminLogin()" class="w-full text-xs bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-stone-800 num-font">
         <label class="flex items-center gap-1.5 text-[11px] text-stone-500 cursor-pointer">
           <input type="checkbox" onchange="document.getElementById('admin-password-input').type = this.checked ? 'text' : 'password'">
           <span>顯示密碼文字</span>
@@ -429,14 +492,17 @@
     </div>
   </div>
 
-  <!-- 彈窗 4：賣家管理後台 -->
-  <div id="admin-dashboard-modal" class="fixed inset-0 z-50 bg-stone-900/75 backdrop-blur-sm flex items-center justify-center p-2 sm:p-6 modal-hidden">
+  <!-- ========================================================= -->
+  <!-- 彈窗 4：賣家管理後台 (訂單查閱、留言回覆、商品新增與改名改價、通知信箱設定、GitHub同步) -->
+  <!-- ========================================================= -->
+  <div id="admin-dashboard-modal" class="modal-hidden fixed inset-0 z-50 bg-stone-900/75 backdrop-blur-sm flex items-center justify-center p-2 sm:p-6">
     <div class="bg-[#FAF7F2] rounded-3xl max-w-6xl w-full h-[92vh] flex flex-col shadow-2xl overflow-hidden border border-stone-300">
       
+      <!-- 後台頂部列 -->
       <div class="bg-stone-900 text-white px-5 py-3.5 flex flex-wrap justify-between items-center gap-2 shrink-0">
         <div class="flex items-center gap-2.5">
           <span class="bg-amber-400 text-stone-950 text-xs font-extrabold px-2.5 py-0.5 rounded-full">賣家管理後台</span>
-          <h3 class="text-sm sm:text-base font-bold">Momhandmade. 訂購資訊查閱・留言回覆・商品管理・GitHub 網站管理中心</h3>
+          <h3 class="text-sm sm:text-base font-bold">Momhandmade. 訂購資訊查閱・自動信件通知・商品與 GitHub 管理中心</h3>
         </div>
         <div class="flex items-center gap-2">
           <button onclick="syncFromGitHubGist(true)" class="text-xs bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-xl transition">🔄 雲端同步讀取</button>
@@ -445,34 +511,40 @@
         </div>
       </div>
 
+      <!-- 後台分頁切換列 -->
       <div class="bg-white border-b border-stone-200 px-5 py-2 flex gap-2 overflow-x-auto shrink-0">
-        <button id="admin-tab-orders" onclick="switchAdminTab('orders')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 shrink-0">
+        <button id="admin-tab-orders" onclick="switchAdminTab('orders')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-stone-800 text-white shrink-0">
           📦 查閱訂購資訊 (<span id="admin-order-count">0</span>)
         </button>
         <button id="admin-tab-messages" onclick="switchAdminTab('messages')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 shrink-0">
           💬 買家留言板與回覆 (<span id="admin-msg-count">0</span>)
         </button>
         <button id="admin-tab-products" onclick="switchAdminTab('products')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 shrink-0">
-          🧶 商品管理 ＆ 新增商品
+          🧶 商品新增・改名改價 ＆ 圖示管理
         </button>
         <button id="admin-tab-settings" onclick="switchAdminTab('settings')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 shrink-0">
-          🏦 匯款帳號 ＆ 密碼設定
+          🏦 匯款帳號・訂單通知信箱 ＆ 密碼設定
         </button>
-        <button id="admin-tab-github" onclick="switchAdminTab('github')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-stone-800 text-white shrink-0">
+        <button id="admin-tab-github" onclick="switchAdminTab('github')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-100 text-amber-950 shrink-0">
           🌐 GitHub 網站架設 ＆ 雲端同步
         </button>
       </div>
 
+      <!-- 後台內容區 -->
       <div class="flex-1 overflow-y-auto p-4 sm:p-6 thin-scroll">
-        <div id="admin-panel-orders" class="space-y-3 modal-hidden"></div>
-        <div id="admin-panel-messages" class="modal-hidden space-y-3"></div>
         
-        <!-- 商品管理分頁 (包含新增商品按鈕) -->
-        <div id="admin-panel-products" class="space-y-4 modal-hidden">
-          <div class="flex justify-between items-center mb-4 bg-amber-50 p-3.5 rounded-2xl border border-amber-200">
+        <!-- 後台分頁 1：買家訂貨紀錄 -->
+        <div id="admin-panel-orders" class="space-y-3"></div>
+
+        <!-- 後台分頁 2：買家聯繫訊息 -->
+        <div id="admin-panel-messages" class="modal-hidden space-y-3"></div>
+
+        <!-- 後台分頁 3：商品新增・改名改價・可否選色切換 ＆ 多張樣式圖示管理 -->
+        <div id="admin-panel-products" class="modal-hidden space-y-4">
+          <div class="flex flex-wrap justify-between items-center gap-3 bg-amber-50 p-4 rounded-2xl border border-amber-200">
             <div>
-              <h4 class="text-xs font-bold text-amber-950">📦 商店商品列表與新增管理</h4>
-              <p class="text-[11px] text-stone-600">您可以隨時點擊右側按鈕新增全新手作編織商品方案、調整價格或設定選色權限。</p>
+              <h4 class="text-xs sm:text-sm font-bold text-amber-950">📦 商店商品列表與新增管理</h4>
+              <p class="text-[11px] text-stone-600 mt-0.5">您可以直接修改現有商品名稱與價格、切換選色權限，或點擊右側按鈕新增全新商品方案。</p>
             </div>
             <button onclick="openAddProductModal()" class="bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow transition shrink-0">
               ＋ 新增全新商品方案
@@ -481,94 +553,145 @@
           <div id="admin-products-list-container" class="space-y-3"></div>
         </div>
 
-        <div id="admin-panel-settings" class="max-w-xl space-y-4 bg-white p-5 rounded-2xl border border-stone-200 modal-hidden">
-          <h4 class="text-sm font-bold text-stone-800 border-b pb-2">🏦 賣家匯款資訊與後台安全密碼設定</h4>
-          <div class="space-y-3 text-xs">
-            <div>
-              <label class="font-bold text-stone-600">銀行名稱與代碼</label>
-              <input id="set-bank-name" type="text" class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2">
+        <!-- 後台分頁 4：商店匯款帳號、接收新訂單通知信箱與後台密碼修改 -->
+        <div id="admin-panel-settings" class="modal-hidden max-w-2xl space-y-5 bg-white p-5 sm:p-6 rounded-2xl border border-stone-200">
+          <h4 class="text-sm sm:text-base font-bold text-stone-800 border-b pb-2.5">🏦 賣家匯款資訊・自動寄信通知信箱 ＆ 後台密碼設定</h4>
+          
+          <div class="space-y-4 text-xs">
+            <!-- 自動寄信通知設定區塊 -->
+            <div class="bg-emerald-50/90 border border-emerald-200 p-4 rounded-2xl space-y-2.5">
+              <div class="flex flex-wrap justify-between items-center gap-2">
+                <label class="font-bold text-emerald-950 text-xs sm:text-sm flex items-center gap-1.5">
+                  <span>📩 接收「新訂單自動通知信」的賣家信箱 (Email)</span>
+                </label>
+                <button onclick="sendTestOrderEmail()" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-xl text-[11px] shadow-sm transition">
+                  📨 儲存並發送測試通知信（首次設定必點）
+                </button>
+              </div>
+              <input id="set-notify-email" type="email" placeholder="請輸入您的常用信箱（例：yourname@gmail.com）" class="w-full bg-white border border-emerald-300 rounded-xl px-3.5 py-2.5 num-font font-bold text-stone-800 focus:outline-none focus:border-emerald-700">
+              <div class="text-[11px] text-emerald-900 leading-relaxed space-y-1">
+                <p>💡 <strong>自動寄信啟用說明（免費免伺服器 FormSubmit 服務）：</strong></p>
+                <ol class="list-decimal list-inside space-y-0.5 text-stone-600">
+                  <li>輸入您的信箱後，點擊右上角 <strong>「📨 儲存並發送測試通知信」</strong>。</li>
+                  <li>請前往您的信箱（若無請檢查垃圾郵件匣），找到主旨為 <strong>「FormSubmit - Confirm your email address」</strong> 的信件，點擊信中的 <strong>「Activate Form」</strong> 按鈕。</li>
+                  <li>啟用完成後，未來只要買家在前台送出訂單，系統就會在背景<strong>自動寄送新訂單通知信</strong>到這個信箱！</li>
+                </ol>
+              </div>
+              <p id="test-email-status" class="text-xs font-bold text-emerald-800"></p>
             </div>
-            <div>
-              <label class="font-bold text-stone-600">匯款帳號</label>
-              <input id="set-bank-account" type="text" class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2 num-font">
+
+            <!-- 匯款帳戶設定 -->
+            <div class="space-y-3 pt-1">
+              <div>
+                <label class="font-bold text-stone-600">銀行名稱與代碼</label>
+                <input id="set-bank-name" type="text" class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2">
+              </div>
+              <div>
+                <label class="font-bold text-stone-600">匯款帳號</label>
+                <input id="set-bank-account" type="text" class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2 num-font">
+              </div>
+              <div>
+                <label class="font-bold text-stone-600">戶名與匯款備註</label>
+                <input id="set-bank-owner" type="text" class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2">
+              </div>
             </div>
-            <div>
-              <label class="font-bold text-stone-600">戶名與匯款備註</label>
-              <input id="set-bank-owner" type="text" class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2">
-            </div>
-            <div class="pt-2 border-t border-stone-200">
-              <label class="font-bold text-stone-600">修改賣家後台密碼（需含英文＋數字＋符號，例如：Mom@2026!）</label>
+
+            <!-- 密碼設定 -->
+            <div class="pt-3 border-t border-stone-200">
+              <label class="font-bold text-stone-600">修改賣家後台密碼（需含「英文＋數字＋符號」，例如：Mom@2026!）</label>
               <input id="set-admin-pwd" type="text" class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2 num-font">
             </div>
-            <button onclick="saveStoreSettings()" class="bg-stone-900 hover:bg-stone-800 text-white font-bold px-5 py-2.5 rounded-xl shadow">
-              💾 儲存設定
+
+            <button onclick="saveStoreSettings()" class="w-full sm:w-auto bg-stone-900 hover:bg-stone-800 text-white font-bold px-6 py-3 rounded-xl shadow transition">
+              💾 儲存所有設定
             </button>
           </div>
         </div>
 
-        <div id="admin-panel-github" class="space-y-5 max-w-4xl">
+        <!-- 後台分頁 5：GitHub 網站架設與雲端資料庫同步中心 -->
+        <div id="admin-panel-github" class="modal-hidden space-y-5 max-w-4xl">
+          <!-- 區塊 A：一鍵匯出部署檔案與 GitHub Pages 架站步驟 -->
           <div class="bg-white p-5 rounded-2xl border border-stone-200 space-y-3">
             <div class="flex flex-wrap justify-between items-center gap-2 border-b border-stone-100 pb-3">
               <div>
                 <span class="text-[10px] font-bold uppercase bg-stone-900 text-white px-2.5 py-0.5 rounded-full">Step 1. 免費永久架站</span>
-                <h4 class="text-sm sm:text-base font-bold text-stone-800 mt-1">🚀 使用 GitHub Pages 設立專屬網站</h4>
+                <h4 class="text-sm sm:text-base font-bold text-stone-800 mt-1">🚀 使用 GitHub Pages 設立穩固的專屬網站</h4>
               </div>
               <button onclick="downloadFullSiteHtml()" class="bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition flex items-center gap-1.5">
                 <span>📥 下載最新網站檔案 (index.html)</span>
               </button>
             </div>
             <ol class="text-xs text-stone-600 space-y-2 list-decimal list-inside leading-relaxed bg-[#FAF7F2] p-4 rounded-xl border border-stone-200/80">
-              <li>登入 GitHub.com，點擊右上角 <strong>「+」➔「New repository」</strong> 建立新專案（例如命名為 <code>momhandmade</code>，並勾選 <strong>Public</strong>）。</li>
-              <li>點擊上方 <strong>「📥 下載最新網站檔案 (index.html)」</strong> 按鈕將檔案下載。</li>
-              <li>在 GitHub 專案頁面點擊 <strong>「Add file」➔「Upload files」</strong>，將 <code>index.html</code> 上傳並點擊 <strong>「Commit changes」</strong>。</li>
-              <li>進入專案頂部的 <strong>「Settings」➔「Pages」</strong>，Branch 選擇 <strong><code>main</code></strong> 並按 <strong>Save</strong>。</li>
+              <li>登入 <a href="https://github.com/" target="_blank" class="text-amber-800 font-bold underline">GitHub.com</a>，進入您的專案倉庫（例如 <code>Momhandmade</code>）。</li>
+              <li>點擊上方 <strong>「📥 下載最新網站檔案 (index.html)」</strong> 按鈕，系統會將您目前設定好的商品、價格、通知信箱與匯款資料打包成乾淨的 <code>index.html</code>。</li>
+              <li>在 GitHub 專案頁面點擊 <strong>「Add file」➔「Upload files」</strong>，將下載的 <code>index.html</code> 上傳並點擊綠色的 <strong>「Commit changes」</strong>。</li>
+              <li>等待約 1 分鐘，即可在您的 GitHub Pages 網址看到最新內容！</li>
             </ol>
           </div>
 
+          <!-- 區塊 B：GitHub Gist 跨裝置雲端訂單/留言同步設定 -->
           <div class="bg-white p-5 rounded-2xl border border-stone-200 space-y-3">
             <div class="border-b border-stone-100 pb-3">
-              <span class="text-[10px] font-bold uppercase bg-emerald-700 text-white px-2.5 py-0.5 rounded-full">Step 2. 跨裝置雲端同步（選填）</span>
-              <h4 class="text-sm sm:text-base font-bold text-stone-800 mt-1">☁️ 串接 GitHub Gist 雲端資料庫</h4>
+              <span class="text-[10px] font-bold uppercase bg-emerald-700 text-white px-2.5 py-0.5 rounded-full">Step 2. 跨裝置訂單＆留言雲端同步（建議開啟）</span>
+              <h4 class="text-sm sm:text-base font-bold text-stone-800 mt-1">☁️ 串接 GitHub Gist 雲端資料庫（讓買家下單、留言與賣家後台跨手機/電腦即時互通）</h4>
+              <p class="text-xs text-stone-500 mt-0.5">
+                填入您的 GitHub Token 與 Gist ID 後，記得點擊上方「📥 下載最新網站檔案 (index.html)」重新上傳至 GitHub，這樣不同手機的買家下單時都會自動同步到同一個雲端資料庫！
+              </p>
             </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div>
-                <label class="font-bold text-stone-600">GitHub Personal Access Token (需勾選 gist 權限)</label>
-                <input id="github-token-input" type="password" placeholder="github_pat_..." class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2 num-font">
+                <label class="font-bold text-stone-600">GitHub Personal Access Token (具備 Gists Read/Write 權限)</label>
+                <input id="github-token-input" type="password" placeholder="ghp_... 或 github_pat_..." class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2 num-font">
               </div>
               <div>
-                <label class="font-bold text-stone-600">GitHub Gist ID (留空可自動建立)</label>
-                <input id="github-gist-input" type="text" placeholder="例如：a1b2c3d4e5f6..." class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2 num-font">
+                <label class="font-bold text-stone-600">GitHub Gist ID (留空可自動建立新雲端資料庫)</label>
+                <input id="github-gist-input" type="text" placeholder="例如：a1b2c3d4e5f6g7h8i9j0" class="w-full mt-1 border border-stone-300 rounded-xl px-3 py-2 num-font">
               </div>
             </div>
+
             <div class="flex flex-wrap gap-2 pt-1">
               <button onclick="saveAndInitGitHubSync()" class="bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition">
                 ☁️ 儲存並立即同步至 GitHub 雲端
               </button>
               <button onclick="syncFromGitHubGist(true)" class="bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition">
-                🔄 從 GitHub 雲端拉取最新資料
+                🔄 從 GitHub 雲端拉取最新訂單與留言
               </button>
+              <button onclick="exportDataJson()" class="bg-stone-100 hover:bg-stone-200 text-stone-700 border border-stone-300 text-xs font-bold px-3.5 py-2.5 rounded-xl transition">
+                💾 匯出備份檔 (.json)
+              </button>
+              <label class="cursor-pointer bg-stone-100 hover:bg-stone-200 text-stone-700 border border-stone-300 text-xs font-bold px-3.5 py-2.5 rounded-xl transition">
+                📂 匯入備份檔 (.json)
+                <input type="file" accept=".json" onchange="importDataJson(event)" class="hidden">
+              </label>
             </div>
             <p id="github-sync-status" class="text-xs font-bold text-emerald-700"></p>
           </div>
         </div>
+
       </div>
     </div>
   </div>
 
+  <!-- ========================================================= -->
   <!-- 彈窗 5：完整色卡總覽與 PNG 下載 -->
+  <!-- ========================================================= -->
   <div id="color-modal" class="modal-hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto" onclick="if(event.target === this) toggleColorModal(false)">
     <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6 shadow-2xl thin-scroll">
       <div class="flex justify-between items-center border-b border-stone-200 pb-3 sticky top-0 bg-white z-10">
         <div>
           <h3 class="text-base sm:text-lg font-bold text-stone-800">🎨 Momhandmade. 品牌色卡總覽</h3>
-          <p class="text-xs text-stone-500">不接急件，選色編織後無法更改，如色號有疑問，歡迎聯絡賣家</p>
+          <p class="text-xs text-stone-500">不接急件，如有特殊需求請提前告知，選色編織後無法更改，如色號有疑問，歡迎聯絡賣家</p>
         </div>
         <button onclick="toggleColorModal(false)" class="text-stone-400 hover:text-stone-800 text-2xl font-bold px-2">✕</button>
       </div>
 
+      <!-- 24色卡 -->
       <div class="space-y-2">
         <div class="flex justify-end">
-          <button onclick="exportChart('export-24', 'Momhandmade_24色毛線球色卡.png')" class="bg-stone-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl shadow">📸 下載 24色毛線球色卡 (PNG)</button>
+          <button onclick="exportChart('export-24', 'Momhandmade_24色毛線球色卡.png')" class="bg-stone-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl shadow">
+            📸 下載 24色毛線球色卡 (PNG)
+          </button>
         </div>
         <div id="export-24" class="bg-[#FAF7F2] p-6 rounded-3xl border border-stone-200">
           <div class="flex justify-between items-end border-b border-stone-200 pb-2 mb-4">
@@ -579,9 +702,12 @@
         </div>
       </div>
 
+      <!-- 20色卡 -->
       <div class="space-y-2">
         <div class="flex justify-end">
-          <button onclick="exportChart('export-20', 'Momhandmade_20色粗毛線色卡.png')" class="bg-amber-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl shadow">📸 下載 20色粗毛線色卡 (PNG)</button>
+          <button onclick="exportChart('export-20', 'Momhandmade_20色粗毛線色卡.png')" class="bg-amber-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl shadow">
+            📸 下載 20色粗毛線色卡 (PNG)
+          </button>
         </div>
         <div id="export-20" class="bg-[#FAF7F2] p-6 rounded-3xl border border-stone-200">
           <div class="flex justify-between items-end border-b border-stone-200 pb-2 mb-4">
@@ -594,14 +720,18 @@
     </div>
   </div>
 
-  <!-- 彈窗 6：樣式圖示放大燈箱 -->
+  <!-- ========================================================= -->
+  <!-- 彈窗 6：樣式圖示放大檢視燈箱 -->
+  <!-- ========================================================= -->
   <div id="lightbox-modal" class="modal-hidden fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4" onclick="closeLightbox()">
     <img id="lightbox-img" src="" alt="放大預覽" class="max-h-[90vh] max-w-[92vw] rounded-2xl shadow-2xl object-contain">
   </div>
 
-  <!-- 彈窗 7：新增商品彈窗 -->
+  <!-- ========================================================= -->
+  <!-- 彈窗 7：動態新增全新商品方案彈窗 -->
+  <!-- ========================================================= -->
   <div id="add-product-modal" class="modal-hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onclick="if(event.target === this) closeAddProductModal()">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl max-h-[92vh] overflow-y-auto thin-scroll">
       <div class="flex justify-between items-center border-b border-stone-200 pb-3">
         <h3 class="text-base font-bold text-stone-800">➕ 新增全新手作商品方案</h3>
         <button onclick="closeAddProductModal()" class="text-stone-400 hover:text-stone-800 text-lg font-bold">✕</button>
@@ -622,32 +752,44 @@
             <input id="new-prod-icon" type="text" value="🌷" class="w-full mt-1 bg-stone-50 border border-stone-300 rounded-xl px-3 py-2 text-center">
           </div>
         </div>
-        <div>
-          <label class="font-bold text-stone-700">舞台預覽外觀形狀</label>
-          <select id="new-prod-shape" class="w-full mt-1 bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
-            <option value="flower">花朵造型 (flower)</option>
-            <option value="zongzi">粽子/束口袋造型 (zongzi)</option>
-            <option value="bear">小熊/圓形置物墊造型 (bear)</option>
-            <option value="bandana">帽子/頭巾造型 (bandana)</option>
-          </select>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="font-bold text-stone-700">舞台預覽外觀形狀</label>
+            <select id="new-prod-shape" class="w-full mt-1 bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
+              <option value="flower">花朵造型 (flower)</option>
+              <option value="zongzi">粽子/束口袋造型 (zongzi)</option>
+              <option value="bear">小熊/圓形置物墊 (bear)</option>
+              <option value="bandana">帽子/頭巾造型 (bandana)</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-bold text-stone-700">選色權限設定</label>
+            <select id="new-prod-customizable" class="w-full mt-1 bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
+              <option value="true">🎨 開放買家自由選色</option>
+              <option value="false">🔒 固定配色 (無法選色)</option>
+            </select>
+          </div>
         </div>
         <div>
-          <label class="font-bold text-stone-700">選色部位名稱（用逗號隔開）</label>
-          <input id="new-prod-parts" type="text" value="花瓣顏色, 花莖顏色" class="w-full mt-1 bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
+          <label class="font-bold text-stone-700">選色部位名稱（請用逗號隔開，最多 3 個部位）</label>
+          <input id="new-prod-parts" type="text" value="主體顏色, 花瓣顏色, 點綴配色" class="w-full mt-1 bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
         </div>
         <div>
-          <label class="font-bold text-stone-700">上傳商品樣式圖片 (可多選)</label>
-          <input id="new-prod-images" type="file" accept="image/*" multiple class="w-full mt-1 text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-100 file:text-amber-950 hover:file:bg-amber-200">
+          <label class="font-bold text-stone-700">上傳商品樣式圖片 (可多選，未上傳則自動產生預設圖示)</label>
+          <input id="new-prod-images" type="file" accept="image/*" multiple class="w-full mt-1 text-xs file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-100 file:text-amber-950 hover:file:bg-amber-200">
         </div>
 
         <button onclick="confirmAddNewProduct()" class="w-full bg-stone-900 hover:bg-stone-800 text-white font-bold py-3 rounded-xl shadow transition mt-2">
-          ✅ 確認建立新商品
+          ✅ 確認建立新商品方案
         </button>
       </div>
     </div>
   </div>
 
 <script>
+// =========================================================
+// 1. 色卡資料庫 (24色毛線球 + 20色粗毛線)
+// =========================================================
 const palette24 = [
   { code: '#40', name: '米白', hex: '#EFECE6' },
   { code: '#08', name: '米色', hex: '#DFCBB5' },
@@ -698,6 +840,7 @@ const palette20 = [
   { code: '#320', name: '白色', hex: '#EFEFEF' }
 ];
 
+// 自動產生預設的高質感樣式展示圖 SVG Data URL
 function createSampleCardSvg(title, subtitle, bgHex, accentHex1, accentHex2) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="420" viewBox="0 0 600 420">
     <rect width="600" height="420" rx="24" fill="${bgHex}"/>
@@ -709,37 +852,111 @@ function createSampleCardSvg(title, subtitle, bgHex, accentHex1, accentHex2) {
   return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
 }
 
+// 原始 10 款編織商品完整設定
 const defaultProducts = [
   {
     id: 1, name: '小雛菊花朵收納袋', price: 350, icon: '🌼', shape: 'flower', customizable: true,
     parts: ['網袋顏色', '花瓣顏色', '花蕊顏色'], defaultCodes: ['#06', '#40', '#02'],
     images: [
       createSampleCardSvg('小雛菊花朵收納袋 (樣式一)', '豆綠網袋 × 米白花瓣 × 奶油花蕊', '#F5EFE6', '#A4AE77', '#EFECE6'),
-      createSampleCardSvg('小雛菊花朵收納袋 (樣式二)', '石墨網袋 × 鮭魚橘花瓣 × 米白花蕊', '#EFECE6', '#716D74', '#E06243')
+      createSampleCardSvg('小雛菊花朵收納袋 (樣式二)', '石墨網袋 × 鮭魚橘花瓣 × 米白花蕊', '#EFECE6', '#716D74', '#E06243'),
+      createSampleCardSvg('小雛菊花朵收納袋 (樣式三)', '藕荷網袋 × 奶油花瓣 × 米白花蕊', '#F7F2EE', '#C68597', '#F2E1B3')
     ]
   },
   {
-    id: 2, name: '三角粽子造型零錢包', price: 350, icon: '🍙', shape: 'zongzi', customizable: true,
+    id: 2, name: '三角粽子造型零錢包', price: 290, icon: '🍙', shape: 'zongzi', customizable: true,
     parts: ['上半部顏色', '下半部顏色', '滾邊顏色'], defaultCodes: ['#32', '#06', '#40'],
     images: [
-      createSampleCardSvg('三角粽子零錢包 (抹茶綠款)', '松綠 × 豆綠 × 米白滾邊', '#F2F5EC', '#1E7A50', '#A4AE77')
+      createSampleCardSvg('三角粽子零錢包 (抹茶綠款)', '松綠 × 豆綠 × 米白滾邊', '#F2F5EC', '#1E7A50', '#A4AE77'),
+      createSampleCardSvg('三角粽子零錢包 (櫻花粉款)', '桃紅 × 裸粉 × 米白滾邊', '#FDF2F4', '#C43666', '#ECC3BA')
+    ]
+  },
+  {
+    id: 3, name: '立體花圈造型杯墊', price: 280, icon: '💐', shape: 'flower', customizable: true,
+    parts: ['外圈藤蔓色', '主花瓣色', '花蕊中心色'], defaultCodes: ['#06', '#40', '#23'],
+    images: [
+      createSampleCardSvg('立體花圈造型杯墊 (綜合花園)', '豆綠藤蔓 × 米白底 × 繽紛立體小花', '#FAF6F0', '#A4AE77', '#E5B045')
+    ]
+  },
+  {
+    id: 4, name: '小熊造型編織杯墊', price: 220, icon: '🧸', shape: 'bear', customizable: true,
+    parts: ['臉部主體色', '雙耳配色'], defaultCodes: ['#08', '#17'],
+    images: [
+      createSampleCardSvg('小熊造型編織杯墊 (奶茶色)', '溫潤燕麥奶茶色調', '#F5EFE8', '#DFCBB5', '#BCA89F')
+    ]
+  },
+  {
+    id: 5, name: '大眼怪獸造型置物墊', price: 320, icon: '👀', shape: 'bear', customizable: false,
+    parts: ['身體主色', '眼白與配件色'], defaultCodes: ['#19', '#40'],
+    images: [
+      createSampleCardSvg('大眼怪獸造型置物墊 (固定配色)', '經典焦糖咖啡色配立體大眼', '#F5EFE6', '#9A6B45', '#EFECE6')
+    ]
+  },
+  {
+    id: 6, name: '立體花朵束口袋＆玉米', price: 360, icon: '🌽', shape: 'zongzi', customizable: true,
+    parts: ['葉片底座色', '花朵配色', '綁帶顏色'], defaultCodes: ['#06', '#10', '#40'],
+    images: [
+      createSampleCardSvg('立體花朵束口袋 (粉綠花苞)', '豆綠葉片 × 粉白花瓣 × 珍珠釦', '#F3F6EE', '#A4AE77', '#E5A0A6')
+    ]
+  },
+  {
+    id: 7, name: '向日葵／花朵造型杯墊', price: 250, icon: '🌻', shape: 'flower', customizable: true,
+    parts: ['外圍花瓣色', '內圈花瓣色', '花心深色'], defaultCodes: ['#23', '#02', '#21'],
+    images: [
+      createSampleCardSvg('向日葵造型杯墊 (暖陽黃)', '杏桃黃花瓣 × 深棕花心', '#FCF8EE', '#E5B045', '#583E3A'),
+      createSampleCardSvg('藍小花與紫花杯墊', '天藍滾深棕邊 / 薰衣草紫花', '#F3F4F8', '#9EC1C7', '#B8A3CE')
+    ]
+  },
+  {
+    id: 8, name: '小雞杯墊＆立體小烏龜', price: 340, icon: '🐢', shape: 'bear', customizable: false,
+    parts: ['身體主體色', '雞冠／龜殼色'], defaultCodes: ['#40', '#38'],
+    images: [
+      createSampleCardSvg('小雞杯墊＆立體小烏龜 (固定配色)', '純白紅冠小雞 × 抹茶綠殼小烏龜', '#F4F6F0', '#EFECE6', '#1E7A50')
+    ]
+  },
+  {
+    id: 9, name: '鏤空花紋編織綁帶帽', price: 580, icon: '👒', shape: 'bandana', customizable: true,
+    parts: ['帽身主色', '綁帶滾邊色'], defaultCodes: ['#35', '#40'],
+    images: [
+      createSampleCardSvg('鏤空花紋編織綁帶帽 (銀灰款)', '精緻鏤空花紋與雙綁帶', '#F2F2F3', '#716D74', '#EFECE6')
+    ]
+  },
+  {
+    id: 10, name: '雙色滾邊編織三角頭巾', price: 420, icon: '🧣', shape: 'bandana', customizable: true,
+    parts: ['頭巾主體色', '蕾絲滾邊色'], defaultCodes: ['#38', '#40'],
+    images: [
+      createSampleCardSvg('雙色滾邊三角頭巾 (紅白經典)', '復古紅主體 × 米白蕾絲滾邊', '#FAF0F0', '#B81D24', '#EFECE6'),
+      createSampleCardSvg('雙色滾邊三角頭巾 (藍白清新)', '米白主體 × 孔雀藍滾邊與小花尾飾', '#F0F5FA', '#EFECE6', '#1C3F85')
     ]
   }
 ];
 
+// =========================================================
+// 2. 系統狀態與 LocalStorage + GitHub 雲端持久化載入 (修正空陣列覆蓋問題)
+// =========================================================
 const EMBEDDED_INITIAL_STATE = null;
 
-let products = JSON.parse(localStorage.getItem('mom_products_v3')) || (EMBEDDED_INITIAL_STATE && EMBEDDED_INITIAL_STATE.products) || defaultProducts;
-let orders = JSON.parse(localStorage.getItem('mom_orders_v3')) || (EMBEDDED_INITIAL_STATE && EMBEDDED_INITIAL_STATE.orders) || [];
-let buyerMessages = JSON.parse(localStorage.getItem('mom_messages_v3')) || (EMBEDDED_INITIAL_STATE && EMBEDDED_INITIAL_STATE.buyerMessages) || [];
-let storeSettings = JSON.parse(localStorage.getItem('mom_settings_v3')) || (EMBEDDED_INITIAL_STATE && EMBEDDED_INITIAL_STATE.storeSettings) || {
+function loadSafeJson(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+let products = loadSafeJson('mom_products_v2') || (EMBEDDED_INITIAL_STATE && EMBEDDED_INITIAL_STATE.products && EMBEDDED_INITIAL_STATE.products.length ? EMBEDDED_INITIAL_STATE.products : defaultProducts);
+let orders = loadSafeJson('mom_orders_v2') || (EMBEDDED_INITIAL_STATE && EMBEDDED_INITIAL_STATE.orders && EMBEDDED_INITIAL_STATE.orders.length ? EMBEDDED_INITIAL_STATE.orders : []);
+let buyerMessages = loadSafeJson('mom_messages_v2') || (EMBEDDED_INITIAL_STATE && EMBEDDED_INITIAL_STATE.buyerMessages && EMBEDDED_INITIAL_STATE.buyerMessages.length ? EMBEDDED_INITIAL_STATE.buyerMessages : []);
+let storeSettings = Object.assign({
   bankName: '700 中華郵政（或 822 中國信託）',
   bankAccount: '0001234-0567890',
   bankOwner: 'Momhandmade 手作工坊（匯款後請回報後五碼）',
+  sellerNotifyEmail: '',
   adminPwd: 'Mom@2026!',
   githubToken: '',
   githubGistId: ''
-};
+}, (EMBEDDED_INITIAL_STATE && EMBEDDED_INITIAL_STATE.storeSettings) || {}, loadSafeJson('mom_settings_v2') || {});
 
 if (!storeSettings.adminPwd || /[\u4e00-\u9fa5]/.test(storeSettings.adminPwd)) {
   storeSettings.adminPwd = 'Mom@2026!';
@@ -756,35 +973,69 @@ let cart = [];
 let shippingMethod = 'cvs';
 let isAdminAuthenticated = false;
 
+// 修正：將訂單、留言、設定與商品分開獨立 try-catch 儲存，確保商品圖片較大時絕不影響訂單寫入！
 function saveAllToStorage() {
+  try { localStorage.setItem('mom_orders_v2', JSON.stringify(orders)); } catch (e) {}
+  try { localStorage.setItem('mom_messages_v2', JSON.stringify(buyerMessages)); } catch (e) {}
+  try { localStorage.setItem('mom_settings_v2', JSON.stringify(storeSettings)); } catch (e) {}
   try {
-    localStorage.setItem('mom_products_v3', JSON.stringify(products));
-    localStorage.setItem('mom_orders_v3', JSON.stringify(orders));
-    localStorage.setItem('mom_messages_v3', JSON.stringify(buyerMessages));
-    localStorage.setItem('mom_settings_v3', JSON.stringify(storeSettings));
-  } catch (e) {}
+    localStorage.setItem('mom_products_v2', JSON.stringify(products));
+  } catch (e) {
+    showToast('⚠️ 圖片總容量較大，建議使用雲端同步或適度精簡高畫質照片');
+  }
+
   if (storeSettings.githubToken && storeSettings.githubGistId) {
     syncToGitHubGist(false);
   }
+}
+
+// 圖片上傳自動壓縮工具（避免塞爆 localStorage）
+function compressImageFile(file, maxWidth = 800, quality = 0.78) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let w = img.width;
+        let h = img.height;
+        if (w > maxWidth) {
+          h = Math.round((h * maxWidth) / w);
+          w = maxWidth;
+        }
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = () => resolve(e.target.result);
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 function findColorByCode(code) {
   return palette24.find(c => c.code === code) || palette20.find(c => c.code === code) || palette24[0];
 }
 
+// =========================================================
+// 3. 商品選擇、選色互動與多圖樣式展示邏輯
+// =========================================================
 function selectProduct(prodId) {
   currentProduct = products.find(p => p.id === prodId) || products[0];
   activePartIndex = 0;
   galleryIndex = 0;
   currentSelections = currentProduct.parts.map((_, idx) => {
-    return findColorByCode(currentProduct.defaultCodes[idx] || '#40');
+    return findColorByCode((currentProduct.defaultCodes && currentProduct.defaultCodes[idx]) || '#40');
   });
   renderAll();
 }
 
 function selectPart(idx) {
   if (!currentProduct.customizable) {
-    showToast('此商品為固定配色款式，無法自選色號！');
+    showToast('此商品為固定配色款式，無法自選色號喔！如有特殊需求請聯絡賣家。');
     return;
   }
   activePartIndex = idx;
@@ -792,11 +1043,14 @@ function selectPart(idx) {
 }
 
 function pickColor(code) {
-  if (!currentProduct.customizable) return;
+  if (!currentProduct.customizable) {
+    showToast('此商品為固定配色款式，無法自選色號！');
+    return;
+  }
   const picked = findColorByCode(code);
   currentSelections[activePartIndex] = picked;
   renderAll();
-  showToast(`已選「${currentProduct.parts[activePartIndex]}：${picked.code} ${picked.name}」`);
+  showToast(`已選「${currentProduct.parts[activePartIndex]}：${picked.code} ${picked.name}」｜不接急件，選色編織後無法更改`);
 }
 
 function switchPalette(pal) {
@@ -828,29 +1082,25 @@ function switchStageTab(tab) {
   renderGalleryStage();
 }
 
-function handleAddStyleImages(event, targetProdId = null) {
+async function handleAddStyleImages(event, targetProdId = null) {
   const files = Array.from(event.target.files || []);
   if (!files.length) return;
   const targetProd = targetProdId ? products.find(p => p.id === targetProdId) : currentProduct;
   if (!targetProd.images) targetProd.images = [];
 
-  let loadedCount = 0;
-  files.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      targetProd.images.push(e.target.result);
-      loadedCount++;
-      if (loadedCount === files.length) {
-        galleryIndex = targetProd.images.length - 1;
-        saveAllToStorage();
-        if (!targetProdId) switchStageTab('gallery');
-        renderAll();
-        if (isAdminAuthenticated) renderAdminProducts();
-        showToast(`✅ 已新增 ${files.length} 張圖示！`);
-      }
-    };
-    reader.readAsDataURL(file);
-  });
+  for (const file of files) {
+    const compressedDataUrl = await compressImageFile(file);
+    targetProd.images.push(compressedDataUrl);
+  }
+
+  galleryIndex = targetProd.images.length - 1;
+  saveAllToStorage();
+  if (!targetProdId) {
+    switchStageTab('gallery');
+  }
+  renderAll();
+  if (isAdminAuthenticated) renderAdminProducts();
+  showToast(`✅ 已成功為「${targetProd.name}」新增 ${files.length} 張樣式圖示！（目前共 ${targetProd.images.length} 張）`);
   event.target.value = '';
 }
 
@@ -864,14 +1114,14 @@ function stepGallery(dir) {
 function deleteCurrentStyleImage() {
   const imgs = currentProduct.images || [];
   if (imgs.length <= 1) {
-    showToast('至少需保留 1 張圖示！');
+    showToast('至少需保留 1 張基本樣式圖示喔！您可先新增其他圖片再刪除此張。');
     return;
   }
   imgs.splice(galleryIndex, 1);
   galleryIndex = Math.max(0, galleryIndex - 1);
   saveAllToStorage();
   renderAll();
-  showToast('已刪除圖示');
+  showToast('已刪除該張樣式圖示');
 }
 
 function openLightbox() {
@@ -885,75 +1135,9 @@ function closeLightbox() {
   document.getElementById('lightbox-modal').classList.add('modal-hidden');
 }
 
-// 新增商品彈窗控制
-function openAddProductModal() {
-  document.getElementById('add-product-modal').classList.remove('modal-hidden');
-}
-
-function closeAddProductModal() {
-  document.getElementById('add-product-modal').classList.add('modal-hidden');
-}
-
-function confirmAddNewProduct() {
-  const name = document.getElementById('new-prod-name').value.trim();
-  const price = parseInt(document.getElementById('new-prod-price').value, 10);
-  const icon = document.getElementById('new-prod-icon').value.trim() || '🎁';
-  const shape = document.getElementById('new-prod-shape').value;
-  const partsInput = document.getElementById('new-prod-parts').value.trim();
-  const imageInput = document.getElementById('new-prod-images');
-
-  if (!name || isNaN(price)) {
-    showToast('⚠️ 請完整填寫商品名稱與有效售價！');
-    return;
-  }
-
-  const parts = partsInput ? partsInput.split(',').map(s => s.trim()).filter(Boolean) : ['主體顏色'];
-  const defaultCodes = parts.map(() => '#40');
-
-  const files = Array.from(imageInput.files || []);
-  if (files.length === 0) {
-    createNewProductObj(name, price, icon, shape, parts, defaultCodes, [
-      createSampleCardSvg(name, '全新客製手作款式', '#F5EFE6', '#EFECE6', '#A4AE77')
-    ]);
-  } else {
-    let loadedImages = [];
-    let count = 0;
-    files.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        loadedImages.push(e.target.result);
-        count++;
-        if (count === files.length) {
-          createNewProductObj(name, price, icon, shape, parts, defaultCodes, loadedImages);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-}
-
-function createNewProductObj(name, price, icon, shape, parts, defaultCodes, images) {
-  const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
-  const newProduct = {
-    id: newId,
-    name,
-    price,
-    icon,
-    shape,
-    customizable: true,
-    parts,
-    defaultCodes,
-    images
-  };
-
-  products.push(newProduct);
-  saveAllToStorage();
-  selectProduct(newId);
-  renderAdminAll();
-  closeAddProductModal();
-  showToast(`🎉 成功新增商品：「${name}」！`);
-}
-
+// =========================================================
+// 4. 畫面渲染核心函式
+// =========================================================
 function renderAll() {
   const prodListEl = document.getElementById('product-list');
   prodListEl.innerHTML = products.map(p => {
@@ -1019,7 +1203,7 @@ function renderAll() {
 function renderColorPickerPanels() {
   const partGridEl = document.getElementById('part-selector-grid');
   partGridEl.innerHTML = currentProduct.parts.map((partName, idx) => {
-    const sel = currentSelections[idx];
+    const sel = currentSelections[idx] || palette24[0];
     const isActive = idx === activePartIndex;
     return `
       <div onclick="selectPart(${idx})" class="p-2.5 rounded-xl border cursor-pointer transition flex items-center justify-between ${isActive ? 'ring-2 ring-stone-800 bg-[#FAF7F2] border-stone-800' : 'bg-stone-50 hover:bg-stone-100 border-stone-200'}">
@@ -1116,7 +1300,7 @@ function renderSvgStage() {
   }
 
   document.getElementById('svg-part-badges').innerHTML = currentProduct.parts.map((partName, idx) => {
-    const sel = currentSelections[idx];
+    const sel = currentSelections[idx] || palette24[0];
     const isAct = idx === activePartIndex && currentProduct.customizable;
     return `
       <span onclick="selectPart(${idx})" class="cursor-pointer text-[10px] font-bold text-stone-700 px-2 py-0.5 rounded-full shadow-sm border flex items-center gap-1 ${isAct ? 'ring-2 ring-stone-800 bg-white border-stone-800' : 'bg-white/85 border-stone-200'}">
@@ -1143,6 +1327,9 @@ function renderGalleryStage() {
   `).join('');
 }
 
+// =========================================================
+// 5. 訂購車、超商(+60含Google地圖)/自取(0元)、結帳清空與自動寄信通知賣家
+// =========================================================
 function changeQty(delta) {
   currentQty = Math.max(1, currentQty + delta);
   document.getElementById('qty-display').textContent = currentQty;
@@ -1173,14 +1360,15 @@ function addToCart() {
   });
   noteEl.value = '';
   currentQty = 1;
-  document.getElementById('qty-display').textContent = 1;
-  document.getElementById('cart-badge').textContent = cart.length;
-  showToast(`✅ 已加入訂購車！`);
+  document.getElementById('qty-display').textContent = '1';
+  document.getElementById('cart-badge').textContent = String(cart.length);
+  renderCart();
+  showToast(`✅ 已加入訂購車！（目前共 ${cart.length} 項商品）`);
 }
 
 function removeCartItem(index) {
   cart.splice(index, 1);
-  document.getElementById('cart-badge').textContent = cart.length;
+  document.getElementById('cart-badge').textContent = String(cart.length);
   renderCart();
 }
 
@@ -1215,9 +1403,10 @@ function updateGoogleMap() {
 function renderCart() {
   const container = document.getElementById('cart-items-container');
   const checkoutSection = document.getElementById('cart-checkout-section');
+  document.getElementById('cart-badge').textContent = String(cart.length);
 
   if (cart.length === 0) {
-    container.innerHTML = `<div class="text-center py-12 text-stone-400 text-xs">目前訂購車還沒有商品喔！</div>`;
+    container.innerHTML = `<div class="text-center py-12 text-stone-400 text-xs">目前訂購車還沒有商品喔！<br>請先在主畫面挑選款式與毛線配色。</div>`;
     checkoutSection.classList.add('modal-hidden');
     return;
   }
@@ -1273,24 +1462,108 @@ function quickCopySingle() {
   const note = document.getElementById('item-note').value.trim();
   const selList = getSelectionSummaryList();
   const partLines = selList.map(s => `  • ${s.partName}：${s.code} ${s.name}`).join('\n');
-  const text = `【Momhandmade. 客製化訂貨資訊】\n🧶 款式：${currentProduct.name}\n🎨 選色明細：\n${partLines}\n📦 數量：${currentQty} 件 (單價 NT$${currentProduct.price})\n📝 特殊需求備註：${note || '無'}`;
+  const text = `【Momhandmade. 客製化訂貨資訊】\n🧶 款式：${currentProduct.name}\n🎨 選色明細：\n${partLines}\n📦 數量：${currentQty} 件 (單價 NT$${currentProduct.price})\n📝 特殊需求備註：${note || '無'}\n⚠️ 買家已讀須知：不接急件，如有特殊需求請提前告知，選色編織後無法更改，如色號有疑問，歡迎聯絡賣家`;
   copyTextSafe(text);
-  showToast('📋 已複製訂貨資訊！');
+  showToast('📋 已複製訂貨資訊！您可加入訂購車直接結帳或於留言板詢問賣家');
 }
 
 function copyBankAccount() {
   copyTextSafe(`${storeSettings.bankName} 帳號：${storeSettings.bankAccount}`);
-  showToast(`🏦 已複製匯款帳號：${storeSettings.bankAccount}`);
+  showToast(`🏦 已複製匯款帳號：${storeSettings.bankAccount}（匯款後請回報後五碼）`);
 }
 
-function submitOrder() {
+// 自動寄送新訂單 Email 通知給賣家（使用 FormSubmit AJAX 服務）
+async function sendOrderEmailNotification(order) {
+  const notifyEmail = (storeSettings.sellerNotifyEmail || '').trim();
+  if (!notifyEmail) return false;
+
+  const itemsSummary = order.items.map((item, idx) => {
+    const partsStr = item.selections.map(s => `${s.partName}[${s.code}${s.name}]`).join(' / ');
+    return `${idx + 1}. ${item.productName} x${item.qty} (NT$${item.price * item.qty}) - 配色: ${partsStr}${item.note ? ' | 備註: ' + item.note : ''}`;
+  }).join('\n');
+
+  try {
+    const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(notifyEmail)}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        _subject: `【Momhandmade. 新訂單通知】#${order.orderNo}（買家：${order.customerName}，總計 NT$${order.total}）`,
+        _template: 'table',
+        _captcha: 'false',
+        '訂單編號': `#${order.orderNo}`,
+        '下單時間': order.createdAt,
+        '買家姓名': order.customerName,
+        '聯絡電話': order.customerPhone,
+        '買家信箱': order.customerEmail,
+        '取貨方式與地點': order.shippingDetail,
+        '匯款帳號後五碼': order.remitLast5,
+        '訂購商品與選色明細': itemsSummary,
+        '應付總金額': `NT$ ${order.total}（商品 NT$${order.subtotal} + 運費 NT$${order.shipFee}）`
+      })
+    });
+    return res.ok;
+  } catch (e) {
+    return false;
+  }
+}
+
+// 後台發送測試通知信（供首次啟用 FormSubmit 信箱驗證）
+async function sendTestOrderEmail() {
+  const emailInput = document.getElementById('set-notify-email').value.trim();
+  const statusEl = document.getElementById('test-email-status');
+  if (!emailInput || !emailInput.includes('@')) {
+    showToast('⚠️ 請先輸入有效的接收通知電子信箱 Email！');
+    return;
+  }
+
+  storeSettings.sellerNotifyEmail = emailInput;
+  saveAllToStorage();
+  statusEl.textContent = '⏳ 正在發送測試通知信至 ' + emailInput + ' ...';
+
+  try {
+    const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(emailInput)}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        _subject: '【Momhandmade. 測試通知】您的新訂單自動寄信通知已成功串接！',
+        _template: 'table',
+        _captcha: 'false',
+        '通知狀態': '測試成功！未來買家送出訂單時，系統將自動寄信至此信箱。',
+        '接收信箱': emailInput,
+        '測試時間': new Date().toLocaleString('zh-TW')
+      })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      statusEl.textContent = `✅ 已發送！若您是第一次設定此信箱，請立即至「${emailInput}」（含垃圾郵件匣）收取 FormSubmit 確認信並點擊「Activate Form」即可正式啟用自動通知！`;
+      showToast('✅ 測試信已發送！請至信箱查看（首次設定請點擊信中 Activate 按鈕）');
+    } else {
+      statusEl.textContent = `⚠️ 發送回應：${data.message || '請確認信箱格式是否正確'}`;
+    }
+  } catch (err) {
+    statusEl.textContent = '❌ 網路連線異常，請確認網路環境後再試一次。';
+  }
+}
+
+async function submitOrder() {
+  if (cart.length === 0) {
+    showToast('⚠️ 訂購車目前是空的喔！');
+    return;
+  }
+
   const name = document.getElementById('customer-name').value.trim();
   const phone = document.getElementById('customer-phone').value.trim();
   const email = document.getElementById('customer-email').value.trim();
   const last5 = document.getElementById('remit-last5').value.trim();
 
   if (!name || !phone || !email || !last5) {
-    showToast('⚠️ 請完整填寫買家聯絡資訊與匯款後五碼！');
+    showToast('⚠️ 請完整填寫「買家姓名」、「聯絡電話」、「電子信箱 Email」與「匯款帳號後五碼（或填待補）」！');
     return;
   }
 
@@ -1299,18 +1572,21 @@ function submitOrder() {
     const storeName = document.getElementById('cvs-store-name').value.trim();
     const storeAddr = document.getElementById('cvs-store-address').value.trim();
     if (!storeName || !storeAddr) {
-      showToast('⚠️ 請填寫超商店名與地址！');
+      showToast('⚠️ 選擇超商取貨(+60元)，請填寫「超商店名」與「超商地址」！');
       return;
     }
     shippingDetail = `超商取貨(+60元)｜店名：${storeName}｜地址：${storeAddr}`;
   } else {
     const pickupLoc = document.getElementById('pickup-location-input').value.trim();
     if (!pickupLoc) {
-      showToast('⚠️ 請填寫自取面交地點與時段！');
+      showToast('⚠️ 選擇自取(0元)，請填寫您方便面交的地點與時段！');
       return;
     }
-    shippingDetail = `自取面交(0元)｜地點/時段：${pickupLoc}`;
+    shippingDetail = `自取面交(0元)｜方便面交地點/時段：${pickupLoc}`;
   }
+
+  const submitBtn = document.getElementById('submit-order-btn');
+  if (submitBtn) submitBtn.disabled = true;
 
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
   const shipFee = shippingMethod === 'cvs' ? 60 : 0;
@@ -1332,16 +1608,55 @@ function submitOrder() {
     status: '待確認匯款後五碼'
   };
 
+  // 1. 寫入訂單列表並儲存至 LocalStorage 與雲端
   orders.unshift(newOrder);
   saveAllToStorage();
 
-  cart = [];
+  // 2. 產生並複製文字版訂貨單
+  let orderText = `【Momhandmade. 正式訂貨單 #${newOrder.orderNo}】\n`;
+  orderText += `👤 買家：${name}\n`;
+  orderText += `📞 電話：${phone}\n`;
+  orderText += `✉️ 信箱：${email}\n`;
+  orderText += `🚚 取貨方式：${shippingDetail}\n`;
+  orderText += `🏦 匯款帳號後五碼：【 ${last5} 】(經匯款確認後開始作業)\n`;
+  orderText += `------------------\n`;
+  newOrder.items.forEach((item, i) => {
+    const partsStr = item.selections.map(s => `${s.partName}[${s.code}${s.name}]`).join(' / ');
+    orderText += `${i + 1}. ${item.productName} x${item.qty} (NT$${item.price * item.qty})\n   🎨 ${partsStr}\n`;
+    if (item.note) orderText += `   📝 備註：${item.note}\n`;
+  });
+  orderText += `------------------\n`;
+  orderText += `💰 商品小計：NT$${subtotal} ＋ 運費：NT$${shipFee} ＝ 總金額：NT$ ${total}\n`;
+  orderText += `⚠️ 須知：不接急件，如有特殊需求請提前告知，選色編織後無法更改。`;
+  copyTextSafe(orderText);
+
+  // 3. 徹底清空購物車陣列、徽章與結帳表單欄位
+  cart.length = 0;
   document.getElementById('cart-badge').textContent = '0';
+  document.getElementById('customer-name').value = '';
+  document.getElementById('customer-phone').value = '';
+  document.getElementById('customer-email').value = '';
+  document.getElementById('remit-last5').value = '';
+  document.getElementById('cvs-store-name').value = '';
+  document.getElementById('cvs-store-address').value = '';
+  document.getElementById('pickup-location-input').value = '';
+
+  // 4. 立即刷新購物車、前台與後台訂單畫面
+  renderCart();
   renderAll();
+  renderAdminAll();
   toggleCartDrawer(false);
-  showToast(`🎉 訂單 #${newOrder.orderNo} 已成功送達平台後台！`);
+
+  // 5. 若後台有設定接收通知信箱，自動發送新訂單通知信給賣家
+  sendOrderEmailNotification(newOrder);
+
+  if (submitBtn) submitBtn.disabled = false;
+  showToast(`🎉 訂單 #${newOrder.orderNo} 已成功送入後台、清空訂購車並自動發信通知賣家！`);
 }
 
+// =========================================================
+// 6. 買家詢問留言板
+// =========================================================
 function submitBuyerMessage() {
   const sender = document.getElementById('msg-sender-name').value.trim();
   const phone = document.getElementById('msg-sender-phone').value.trim();
@@ -1349,7 +1664,7 @@ function submitBuyerMessage() {
   const content = document.getElementById('msg-content').value.trim();
 
   if (!sender || !phone || !email || !content) {
-    showToast('⚠️ 請完整填寫稱呼、電話、信箱與留言內容！');
+    showToast('⚠️ 請完整填寫您的稱呼、聯絡電話、電子信箱 Email 與詢問內容！');
     return;
   }
 
@@ -1367,7 +1682,8 @@ function submitBuyerMessage() {
 
   document.getElementById('msg-content').value = '';
   renderAll();
-  showToast('✅ 您的詢問已送達！');
+  renderAdminAll();
+  showToast('✅ 您的詢問已送達留言板與賣家後台！');
 }
 
 function renderPublicMessageBoard() {
@@ -1375,7 +1691,7 @@ function renderPublicMessageBoard() {
   if (!boardEl) return;
 
   if (buyerMessages.length === 0) {
-    boardEl.innerHTML = `<div class="text-center py-6 text-stone-400 text-xs bg-stone-50 rounded-xl border border-stone-200/70">目前尚無留言紀錄</div>`;
+    boardEl.innerHTML = `<div class="text-center py-6 text-stone-400 text-xs bg-stone-50 rounded-xl border border-stone-200/70">目前尚無留言紀錄，有任何選色或訂購問題歡迎在上方留言詢問！</div>`;
     return;
   }
 
@@ -1394,11 +1710,14 @@ function renderPublicMessageBoard() {
           </div>
           <p class="mt-0.5">${m.reply}</p>
         </div>
-      ` : `<div class="text-[10px] text-stone-400 italic">（等待賣家回覆中）</div>`}
+      ` : `<div class="text-[10px] text-stone-400 italic">（賣家收到後將透過電話、Email 或於此處回覆）</div>`}
     </div>
   `).join('');
 }
 
+// =========================================================
+// 7. 賣家專屬後台 (密碼驗證、訂單查閱、新增商品與改名改價、自動通知信箱設定)
+// =========================================================
 function openSellerBackend() {
   if (isAdminAuthenticated) {
     openAdminDashboard();
@@ -1413,6 +1732,13 @@ function closeAdminLogin() {
   document.getElementById('admin-login-modal').classList.add('modal-hidden');
 }
 
+function hasEnglishNumberSymbol(str) {
+  const hasEnglish = /[a-zA-Z]/.test(str);
+  const hasNumber = /[0-9]/.test(str);
+  const hasSymbol = /[^a-zA-Z0-9\s]/.test(str);
+  return hasEnglish && hasNumber && hasSymbol;
+}
+
 function verifyAdminLogin() {
   const input = document.getElementById('admin-password-input').value.trim();
   const errEl = document.getElementById('login-error-msg');
@@ -1421,9 +1747,9 @@ function verifyAdminLogin() {
     isAdminAuthenticated = true;
     closeAdminLogin();
     openAdminDashboard();
-    showToast('🔓 成功登入賣家後台');
+    showToast('🔓 歡迎回來！已成功登入賣家專屬管理後台');
   } else {
-    errEl.textContent = '❌ 密碼錯誤！須包含英文＋數字＋符號。';
+    errEl.textContent = '❌ 密碼錯誤！請輸入正確的賣家後台密碼。';
     errEl.classList.remove('modal-hidden');
   }
 }
@@ -1431,7 +1757,7 @@ function verifyAdminLogin() {
 function logoutAdmin() {
   isAdminAuthenticated = false;
   closeAdminDashboard();
-  showToast('🔒 已安全登出後台');
+  showToast('🔒 已安全登出賣家後台');
 }
 
 function openAdminDashboard() {
@@ -1460,16 +1786,17 @@ function switchAdminTab(tab) {
 }
 
 function renderAdminAll() {
-  document.getElementById('admin-order-count').textContent = orders.length;
-  document.getElementById('admin-msg-count').textContent = buyerMessages.length;
+  document.getElementById('admin-order-count').textContent = String(orders.length);
+  document.getElementById('admin-msg-count').textContent = String(buyerMessages.length);
   renderAdminOrders();
   renderAdminMessages();
   renderAdminProducts();
 
-  document.getElementById('set-bank-name').value = storeSettings.bankName;
-  document.getElementById('set-bank-account').value = storeSettings.bankAccount;
-  document.getElementById('set-bank-owner').value = storeSettings.bankOwner;
-  document.getElementById('set-admin-pwd').value = storeSettings.adminPwd;
+  document.getElementById('set-notify-email').value = storeSettings.sellerNotifyEmail || '';
+  document.getElementById('set-bank-name').value = storeSettings.bankName || '';
+  document.getElementById('set-bank-account').value = storeSettings.bankAccount || '';
+  document.getElementById('set-bank-owner').value = storeSettings.bankOwner || '';
+  document.getElementById('set-admin-pwd').value = storeSettings.adminPwd || 'Mom@2026!';
 
   const tokenEl = document.getElementById('github-token-input');
   const gistEl = document.getElementById('github-gist-input');
@@ -1479,26 +1806,31 @@ function renderAdminAll() {
 
 function renderAdminOrders() {
   const container = document.getElementById('admin-panel-orders');
+  if (!container) return;
+
   if (orders.length === 0) {
-    container.innerHTML = `<div class="bg-white p-10 rounded-2xl text-center text-stone-400 text-xs border border-stone-200">目前尚無訂單。</div>`;
+    container.innerHTML = `<div class="bg-white p-10 rounded-2xl text-center text-stone-400 text-xs border border-stone-200">目前尚無買家訂貨紀錄。當買家於前台送出訂單時，會即時顯示於此處！</div>`;
     return;
   }
 
   container.innerHTML = orders.map((o, idx) => {
     const emailAddr = o.customerEmail || '未填寫';
-    const itemsHtml = o.items.map(item => {
-      const selStr = item.selections.map(s => `<span class="inline-flex items-center gap-1 bg-stone-100 px-2 py-0.5 rounded text-[11px]"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:${s.hex}"></span>${s.partName}:${s.code}${s.name}</span>`).join(' ');
+    const itemsHtml = (o.items || []).map(item => {
+      const selStr = (item.selections || []).map(s => `<span class="inline-flex items-center gap-1 bg-stone-100 px-2 py-0.5 rounded text-[11px]"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:${s.hex}"></span>${s.partName}:${s.code}${s.name}</span>`).join(' ');
       return `
         <div class="border-b border-stone-100 py-1.5 text-xs flex flex-wrap justify-between items-center gap-2">
           <div>
             <strong>${item.productName}</strong> <span class="text-amber-800 font-bold">x${item.qty}</span>
             <div class="flex flex-wrap gap-1 mt-1">${selStr}</div>
-            ${item.note ? `<div class="text-[11px] text-amber-800 mt-0.5">備註：${item.note}</div>` : ''}
+            ${item.note ? `<div class="text-[11px] text-amber-800 mt-0.5">買家備註：${item.note}</div>` : ''}
           </div>
           <div class="num-font font-bold">NT$ ${item.price * item.qty}</div>
         </div>
       `;
     }).join('');
+
+    const mailSubject = encodeURIComponent(`【Momhandmade. 訂單確認通知】您的訂單 #${o.orderNo}`);
+    const mailBody = encodeURIComponent(`${o.customerName} 您好：\n\n感謝您訂購 Momhandmade. 手作編織商品！\n我們已收到您的訂單 #${o.orderNo}（匯款後五碼：${o.remitLast5}，總金額：NT$ ${o.total}）。\n\n祝 順心\nMomhandmade. 手作編織工坊`);
 
     return `
       <div class="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm space-y-2.5">
@@ -1506,7 +1838,7 @@ function renderAdminOrders() {
           <div class="flex items-center gap-2">
             <span class="bg-stone-900 text-white text-xs font-bold px-2.5 py-0.5 rounded-lg num-font">#${o.orderNo}</span>
             <span class="text-xs text-stone-500">${o.createdAt}</span>
-            <span class="bg-amber-100 text-amber-900 text-xs font-bold px-2.5 py-0.5 rounded-full border border-amber-300">後五碼：${o.remitLast5}</span>
+            <span class="bg-amber-100 text-amber-900 text-xs font-bold px-2.5 py-0.5 rounded-full border border-amber-300">匯款後五碼：${o.remitLast5}</span>
           </div>
           <div class="flex items-center gap-2">
             <select onchange="updateOrderStatus(${idx}, this.value)" class="text-xs border border-stone-300 rounded-lg px-2 py-1 font-bold bg-stone-50">
@@ -1515,14 +1847,28 @@ function renderAdminOrders() {
               <option value="已寄出 / 待面交" ${o.status==='已寄出 / 待面交'?'selected':''}>🚚 已寄出 / 待面交</option>
               <option value="訂單已完成" ${o.status==='訂單已完成'?'selected':''}>✅ 訂單已完成</option>
             </select>
-            <button onclick="orders.splice(${idx},1); saveAllToStorage(); renderAdminAll(); renderAll();" class="text-xs text-red-600 font-bold px-2">刪除</button>
+            <button onclick="deleteOrder(${idx})" class="text-xs text-red-600 hover:underline font-bold px-2">刪除</button>
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs bg-[#FAF7F2] p-3 rounded-xl border border-stone-200/70">
-          <div>👤 買家：<strong>${o.customerName}</strong></div>
-          <div>📞 電話：<strong class="num-font text-stone-900">${o.customerPhone}</strong></div>
-          <div>✉️ 信箱：<strong class="num-font text-stone-900">${emailAddr}</strong></div>
+          <div class="flex items-center justify-between">
+            <span>👤 買家：<strong>${o.customerName}</strong></span>
+          </div>
+          <div class="flex items-center justify-between gap-1">
+            <span>📞 電話：<strong class="num-font text-stone-900">${o.customerPhone}</strong></span>
+            <div class="flex gap-1">
+              <a href="tel:${o.customerPhone}" class="bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded font-bold text-[11px] hover:bg-emerald-200">撥打</a>
+              <button onclick="copyTextSafe('${o.customerPhone}'); showToast('已複製買家電話：${o.customerPhone}');" class="bg-white border border-stone-300 px-2 py-0.5 rounded text-[11px]">複製</button>
+            </div>
+          </div>
+          <div class="flex items-center justify-between gap-1">
+            <span class="truncate">✉️ 信箱：<strong class="num-font text-stone-900">${emailAddr}</strong></span>
+            <div class="flex gap-1 shrink-0">
+              <a href="mailto:${emailAddr}?subject=${mailSubject}&body=${mailBody}" class="bg-amber-100 text-amber-950 px-2 py-0.5 rounded font-bold text-[11px] hover:bg-amber-200">寄信回覆</a>
+              <button onclick="copyTextSafe('${emailAddr}'); showToast('已複製買家信箱：${emailAddr}');" class="bg-white border border-stone-300 px-2 py-0.5 rounded text-[11px]">複製</button>
+            </div>
+          </div>
         </div>
 
         <div class="text-xs bg-stone-50 px-3 py-2 rounded-xl border border-stone-200/60">
@@ -1533,7 +1879,7 @@ function renderAdminOrders() {
 
         <div class="flex justify-between items-center pt-1 text-xs font-bold">
           <span class="text-stone-500">狀態：${o.status}</span>
-          <span class="text-sm text-amber-900 num-font">總計：NT$ ${o.total}</span>
+          <span class="text-sm text-amber-900 num-font">總計金額：NT$ ${o.total}（含運費 NT$${o.shipFee}）</span>
         </div>
       </div>
     `;
@@ -1544,82 +1890,159 @@ function updateOrderStatus(idx, newStatus) {
   orders[idx].status = newStatus;
   saveAllToStorage();
   renderAdminOrders();
-  showToast('已更新訂單狀態');
+  showToast(`已更新訂單 #${orders[idx].orderNo} 狀態為：${newStatus}`);
+}
+
+function deleteOrder(idx) {
+  orders.splice(idx, 1);
+  saveAllToStorage();
+  renderAdminAll();
+  renderAll();
+  showToast('已刪除該筆訂單紀錄');
 }
 
 function renderAdminMessages() {
   const container = document.getElementById('admin-panel-messages');
+  if (!container) return;
+
   if (buyerMessages.length === 0) {
-    container.innerHTML = `<div class="bg-white p-10 rounded-2xl text-center text-stone-400 text-xs border border-stone-200">目前尚無留言。</div>`;
+    container.innerHTML = `<div class="bg-white p-10 rounded-2xl text-center text-stone-400 text-xs border border-stone-200">目前尚無買家詢問留言。</div>`;
     return;
   }
 
-  container.innerHTML = buyerMessages.map((m, idx) => `
-    <div class="bg-white p-4 rounded-2xl border border-stone-200 space-y-3">
-      <div class="flex flex-wrap justify-between items-start gap-2 border-b border-stone-100 pb-2 text-xs">
-        <div>
-          <strong class="text-sm text-stone-800">👤 ${m.sender}</strong>
-          <span class="ml-2 font-bold num-font">📞 ${m.phone} | ✉️ ${m.email}</span>
+  container.innerHTML = buyerMessages.map((m, idx) => {
+    const phone = m.phone || '未填寫';
+    const email = m.email || '未填寫';
+    const mailSubject = encodeURIComponent(`【Momhandmade. 客服回覆】關於您在留言板的詢問`);
+    const mailBody = encodeURIComponent(`${m.sender} 您好：\n\n感謝您的留言詢問：「${m.content}」\n\n我們的回覆如下：\n\n\n祝 順心\nMomhandmade. 手作編織工坊`);
+
+    return `
+      <div class="bg-white p-4 rounded-2xl border border-stone-200 space-y-3">
+        <div class="flex flex-wrap justify-between items-start gap-2 border-b border-stone-100 pb-2">
+          <div class="flex flex-wrap items-center gap-2 text-xs">
+            <strong class="text-sm text-stone-800">👤 ${m.sender}</strong>
+            <span class="bg-emerald-50 text-emerald-900 border border-emerald-200 px-2.5 py-0.5 rounded-lg font-bold num-font">📞 電話：${phone}</span>
+            <a href="tel:${phone}" class="text-[11px] bg-emerald-600 text-white px-2 py-0.5 rounded font-bold">撥打電話</a>
+            <span class="bg-amber-50 text-amber-950 border border-amber-200 px-2.5 py-0.5 rounded-lg font-bold num-font">✉️ 信箱：${email}</span>
+            <a href="mailto:${email}?subject=${mailSubject}&body=${mailBody}" class="text-[11px] bg-amber-700 text-white px-2 py-0.5 rounded font-bold">寄信回覆</a>
+            <span class="text-stone-400 num-font">${m.time}</span>
+          </div>
+          <button onclick="buyerMessages.splice(${idx},1); saveAllToStorage(); renderAdminAll(); renderAll();" class="text-xs text-red-600 font-bold shrink-0">刪除此則</button>
         </div>
-        <button onclick="buyerMessages.splice(${idx},1); saveAllToStorage(); renderAdminAll(); renderAll();" class="text-xs text-red-600 font-bold">刪除</button>
+
+        <p class="text-xs text-stone-700 bg-[#FAF7F2] p-3 rounded-xl border border-stone-200/60">${m.content}</p>
+
+        <div class="flex flex-col sm:flex-row gap-2 pt-1">
+          <input 
+            id="reply-input-${idx}" 
+            type="text" 
+            value="${m.reply || ''}" 
+            placeholder="輸入回覆內容（送出後買家可直接在前景留言板看到您的回覆）..." 
+            class="flex-1 text-xs bg-stone-50 border border-stone-300 rounded-xl px-3 py-2"
+          >
+          <button onclick="replyBuyerMessage(${idx})" class="bg-stone-800 hover:bg-stone-700 text-white text-xs font-bold px-4 py-2 rounded-xl shrink-0 transition">
+            💬 儲存並刊登回覆
+          </button>
+        </div>
       </div>
-      <p class="text-xs text-stone-700 bg-[#FAF7F2] p-3 rounded-xl border border-stone-200/60">${m.content}</p>
-      <div class="flex gap-2">
-        <input id="reply-input-${idx}" type="text" value="${m.reply || ''}" placeholder="輸入回覆..." class="flex-1 text-xs bg-stone-50 border border-stone-300 rounded-xl px-3 py-2">
-        <button onclick="replyBuyerMessage(${idx})" class="bg-stone-800 text-white text-xs font-bold px-4 py-2 rounded-xl">回覆</button>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 function replyBuyerMessage(idx) {
   const inputEl = document.getElementById(`reply-input-${idx}`);
-  if (!inputEl) return;
+  if (!inputEl || !buyerMessages[idx]) return;
   buyerMessages[idx].reply = inputEl.value.trim();
   buyerMessages[idx].replyTime = new Date().toLocaleString('zh-TW');
   saveAllToStorage();
   renderAdminMessages();
   renderPublicMessageBoard();
-  showToast('✅ 已回覆留言');
+  showToast('✅ 已成功回覆買家留言！買家可於前台留言板查看。');
 }
 
+// 後台商品管理渲染（支援直接改商品名稱、改價格、切換選色、上傳多圖、刪除商品）
 function renderAdminProducts() {
   const container = document.getElementById('admin-products-list-container');
-  container.innerHTML = products.map((p, index) => `
+  if (!container) return;
+
+  container.innerHTML = products.map((p) => `
     <div class="bg-white p-4 rounded-2xl border border-stone-200 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-      <div class="space-y-1.5">
+      <div class="space-y-1.5 flex-1 min-w-0 w-full">
         <div class="flex flex-wrap items-center gap-2">
           <span class="text-xl">${p.icon}</span>
-          <strong class="text-sm text-stone-800">${p.name}</strong>
-          <span class="num-font text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200 px-2 py-0.5 rounded-lg">NT$ ${p.price}</span>
+          <input 
+            id="admin-name-${p.id}" 
+            type="text" 
+            value="${p.name}" 
+            class="text-xs sm:text-sm font-bold text-stone-800 bg-stone-50 border border-stone-300 rounded-lg px-2.5 py-1 w-48 sm:w-56 focus:outline-none focus:border-stone-800"
+          >
+          <span class="text-xs text-stone-500">NT$</span>
+          <input 
+            id="admin-price-${p.id}" 
+            type="number" 
+            min="0" 
+            value="${p.price}" 
+            class="w-20 text-xs font-bold num-font bg-stone-50 border border-stone-300 rounded-lg px-2 py-1 focus:outline-none focus:border-stone-800"
+          >
+          <button 
+            onclick="updateProductInfo(${p.id})" 
+            class="bg-stone-800 hover:bg-stone-700 text-white text-xs font-bold px-3 py-1 rounded-lg transition"
+          >
+            💾 儲存名稱與價格
+          </button>
         </div>
-        <div class="text-xs text-stone-500">圖示數量：<strong>${(p.images || []).length} 張</strong></div>
+        <div class="text-xs text-stone-500">
+          選色部位：${p.parts.join('、')} ｜ 目前樣式圖示數量：<strong>${(p.images || []).length} 張</strong>
+        </div>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
-        <div class="flex items-center gap-1.5 bg-stone-50 border border-stone-200 px-2.5 py-1 rounded-xl">
-          <span class="text-xs font-bold text-stone-600">NT$</span>
-          <input id="admin-price-${p.id}" type="number" min="0" value="${p.price}" class="w-20 text-xs font-bold num-font bg-white border border-stone-300 rounded-lg px-2 py-1">
-          <button onclick="updateProductPrice(${p.id})" class="bg-stone-800 text-white text-xs font-bold px-2.5 py-1 rounded-lg">改價</button>
-        </div>
-        <button onclick="toggleProductCustomizable(${p.id})" class="px-3 py-1.5 rounded-xl text-xs font-bold transition ${p.customizable ? 'bg-emerald-600 text-white' : 'bg-stone-200 text-stone-700'}">
-          ${p.customizable ? '🎨 選色中' : '🔒 固定配色'}
+      <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto shrink-0">
+        <button 
+          onclick="toggleProductCustomizable(${p.id})" 
+          class="px-3 py-1.5 rounded-xl text-xs font-bold transition ${p.customizable ? 'bg-emerald-600 text-white' : 'bg-stone-200 text-stone-700'}"
+        >
+          ${p.customizable ? '🎨 開放選色 (點擊改為固定)' : '🔒 固定配色 (點擊改為開放)'}
         </button>
-        <button onclick="deleteProduct(${p.id})" class="bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl">刪除商品</button>
+
+        <label class="cursor-pointer bg-amber-100 hover:bg-amber-200 text-amber-950 text-xs font-bold px-3 py-1.5 rounded-xl transition">
+          ＋ 新增樣式圖示
+          <input type="file" accept="image/*" multiple onchange="handleAddStyleImages(event, ${p.id})" class="hidden">
+        </label>
+
+        <button onclick="deleteProduct(${p.id})" class="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-bold px-2.5 py-1.5 rounded-xl transition">
+          刪除
+        </button>
       </div>
     </div>
   `).join('');
 }
 
-function updateProductPrice(prodId) {
+function updateProductInfo(prodId) {
   const prod = products.find(p => p.id === prodId);
-  const inputEl = document.getElementById(`admin-price-${prodId}`);
-  if (!prod || !inputEl) return;
-  prod.price = parseInt(inputEl.value, 10) || 0;
+  const nameEl = document.getElementById(`admin-name-${prodId}`);
+  const priceEl = document.getElementById(`admin-price-${prodId}`);
+  if (!prod || !nameEl || !priceEl) return;
+
+  const newName = nameEl.value.trim();
+  const newPrice = parseInt(priceEl.value, 10);
+  if (!newName || isNaN(newPrice) || newPrice < 0) {
+    showToast('⚠️ 請輸入有效的商品名稱與價格！');
+    return;
+  }
+
+  prod.name = newName;
+  prod.price = newPrice;
+  cart.forEach(item => {
+    if (item.productId === prodId) {
+      item.productName = newName;
+      item.price = newPrice;
+    }
+  });
+
   saveAllToStorage();
   renderAdminProducts();
   renderAll();
-  showToast('✅ 價格已更新');
+  showToast(`✅ 已更新「${prod.name}」售價為 NT$ ${newPrice}！`);
 }
 
 function toggleProductCustomizable(prodId) {
@@ -1629,52 +2052,293 @@ function toggleProductCustomizable(prodId) {
   saveAllToStorage();
   renderAdminProducts();
   renderAll();
-  showToast('選色狀態已更新');
+  showToast(`已將「${prod.name}」設為：${prod.customizable ? '開放買家選色' : '固定配色（無法選色）'}`);
 }
 
 function deleteProduct(prodId) {
   if (products.length <= 1) {
-    showToast('⚠️ 至少需保留一項商品！');
+    showToast('⚠️ 商店至少需保留 1 項商品方案！');
     return;
   }
+  const target = products.find(p => p.id === prodId);
   products = products.filter(p => p.id !== prodId);
-  currentProduct = products[0];
+  if (currentProduct.id === prodId) {
+    selectProduct(products[0].id);
+  }
   saveAllToStorage();
   renderAdminProducts();
   renderAll();
-  showToast('已刪除商品');
+  showToast(`🗑️ 已刪除商品「${target ? target.name : ''}」`);
+}
+
+// 新增全新商品彈窗邏輯
+function openAddProductModal() {
+  document.getElementById('new-prod-name').value = '';
+  document.getElementById('new-prod-price').value = '';
+  document.getElementById('new-prod-images').value = '';
+  document.getElementById('add-product-modal').classList.remove('modal-hidden');
+}
+
+function closeAddProductModal() {
+  document.getElementById('add-product-modal').classList.add('modal-hidden');
+}
+
+async function confirmAddNewProduct() {
+  const name = document.getElementById('new-prod-name').value.trim();
+  const price = parseInt(document.getElementById('new-prod-price').value, 10);
+  const icon = document.getElementById('new-prod-icon').value.trim() || '🎁';
+  const shape = document.getElementById('new-prod-shape').value;
+  const customizable = document.getElementById('new-prod-customizable').value === 'true';
+  const partsInput = document.getElementById('new-prod-parts').value.trim();
+  const imageInput = document.getElementById('new-prod-images');
+
+  if (!name || isNaN(price) || price < 0) {
+    showToast('⚠️ 請完整填寫「商品名稱」與有效的「商品售價」！');
+    return;
+  }
+
+  const parts = partsInput ? partsInput.split(/[,，、]/).map(s => s.trim()).filter(Boolean).slice(0, 3) : ['主體顏色'];
+  const defaultCodes = parts.map((_, i) => ['#40', '#06', '#23'][i] || '#40');
+
+  const files = Array.from(imageInput.files || []);
+  let images = [];
+  if (files.length === 0) {
+    images = [createSampleCardSvg(name, '全新客製手作編織款式', '#F5EFE6', '#A4AE77', '#EFECE6')];
+  } else {
+    for (const file of files) {
+      const compressed = await compressImageFile(file);
+      images.push(compressed);
+    }
+  }
+
+  const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+  const newProduct = {
+    id: newId,
+    name,
+    price,
+    icon,
+    shape,
+    customizable,
+    parts,
+    defaultCodes,
+    images
+  };
+
+  products.push(newProduct);
+  saveAllToStorage();
+  selectProduct(newId);
+  renderAdminAll();
+  closeAddProductModal();
+  showToast(`🎉 成功新增商品方案：「${name}」（NT$${price}）！`);
 }
 
 function saveStoreSettings() {
+  const newPwd = document.getElementById('set-admin-pwd').value.trim();
+  if (!hasEnglishNumberSymbol(newPwd)) {
+    showToast('⚠️ 賣家後台密碼需包含「英文＋數字＋符號」（例如：Mom@2026!）');
+    return;
+  }
+
+  storeSettings.sellerNotifyEmail = document.getElementById('set-notify-email').value.trim();
   storeSettings.bankName = document.getElementById('set-bank-name').value.trim();
   storeSettings.bankAccount = document.getElementById('set-bank-account').value.trim();
   storeSettings.bankOwner = document.getElementById('set-bank-owner').value.trim();
-  storeSettings.adminPwd = document.getElementById('set-admin-pwd').value.trim();
+  storeSettings.adminPwd = newPwd;
+
   saveAllToStorage();
   renderAll();
-  showToast('✅ 設定已儲存');
+  showToast('✅ 商店匯款帳號、訂單通知信箱與後台密碼設定已成功儲存！');
 }
 
+// =========================================================
+// 7.5 GitHub Pages 網站打包匯出 ＆ GitHub Gist 雲端同步功能
+// =========================================================
 function downloadFullSiteHtml() {
-  let htmlContent = document.documentElement.outerHTML;
+  const statePayload = {
+    products,
+    orders,
+    buyerMessages,
+    storeSettings: {
+      bankName: storeSettings.bankName,
+      bankAccount: storeSettings.bankAccount,
+      bankOwner: storeSettings.bankOwner,
+      sellerNotifyEmail: storeSettings.sellerNotifyEmail || '',
+      adminPwd: storeSettings.adminPwd,
+      githubToken: storeSettings.githubToken || '',
+      githubGistId: storeSettings.githubGistId || ''
+    }
+  };
+
+  // 複製乾淨的 DOM 並確保所有彈窗在匯出的 HTML 中皆為關閉隱藏狀態
+  const clonedDoc = document.documentElement.cloneNode(true);
+  ['cart-drawer', 'contact-modal', 'admin-login-modal', 'admin-dashboard-modal', 'color-modal', 'lightbox-modal', 'add-product-modal', 'global-toast'].forEach(id => {
+    const el = clonedDoc.querySelector('#' + id);
+    if (el) el.classList.add('modal-hidden');
+  });
+
+  let htmlContent = clonedDoc.outerHTML;
+  htmlContent = htmlContent.replace(
+    /const EMBEDDED_INITIAL_STATE = .*?;/,
+    `const EMBEDDED_INITIAL_STATE = ${JSON.stringify(statePayload)};`
+  );
+
   const blob = new Blob(['<!DOCTYPE html>\n' + htmlContent], { type: 'text/html;charset=utf-8' });
   const link = document.createElement('a');
   link.download = 'index.html';
   link.href = URL.createObjectURL(blob);
   link.click();
-  showToast('📥 網頁檔案下載成功！');
+  showToast('📥 已成功打包最新網站檔案 (index.html)！可直接上傳至 GitHub 專案覆蓋舊檔。');
 }
 
 async function saveAndInitGitHubSync() {
-  storeSettings.githubToken = document.getElementById('github-token-input').value.trim();
-  storeSettings.githubGistId = document.getElementById('github-gist-input').value.trim();
-  saveAllToStorage();
-  showToast('✅ GitHub 設定已儲存');
+  const token = document.getElementById('github-token-input').value.trim();
+  let gistId = document.getElementById('github-gist-input').value.trim();
+  const statusEl = document.getElementById('github-sync-status');
+
+  if (!token) {
+    showToast('⚠️ 請輸入您的 GitHub Personal Access Token！');
+    return;
+  }
+
+  storeSettings.githubToken = token;
+  storeSettings.githubGistId = gistId;
+  statusEl.textContent = '⏳ 正在連線至 GitHub 雲端資料庫...';
+
+  try {
+    if (!gistId) {
+      const res = await fetch('https://api.github.com/gists', {
+        method: 'POST',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          description: 'Momhandmade Store Cloud Database',
+          public: false,
+          files: {
+            'momhandmade_db.json': {
+              content: JSON.stringify({ products, orders, buyerMessages, storeSettings, updatedAt: new Date().toISOString() })
+            }
+          }
+        })
+      });
+      if (!res.ok) throw new Error('Token 驗證失敗或無 Gists 權限');
+      const data = await res.json();
+      storeSettings.githubGistId = data.id;
+      document.getElementById('github-gist-input').value = data.id;
+      saveAllToStorage();
+      statusEl.textContent = `✅ 已自動建立 GitHub 雲端資料庫 (Gist ID: ${data.id}) 並完成同步！`;
+      showToast('✅ GitHub 雲端資料庫建立成功！');
+    } else {
+      await syncToGitHubGist(true);
+    }
+  } catch (err) {
+    statusEl.textContent = `❌ 雲端連線失敗：${err.message}`;
+    showToast('⚠️ GitHub 雲端連線失敗，請檢查 Token 是否正確且具備 Gists Read/Write 權限');
+  }
 }
 
-async function syncToGitHubGist(notify = false) {}
-async function syncFromGitHubGist(notify = false) {}
+async function syncToGitHubGist(showNotification = false) {
+  if (!storeSettings.githubToken || !storeSettings.githubGistId) return;
+  const statusEl = document.getElementById('github-sync-status');
+  try {
+    const res = await fetch(`https://api.github.com/gists/${storeSettings.githubGistId}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `token ${storeSettings.githubToken}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        files: {
+          'momhandmade_db.json': {
+            content: JSON.stringify({ products, orders, buyerMessages, storeSettings, updatedAt: new Date().toISOString() })
+          }
+        }
+      })
+    });
+    if (!res.ok) throw new Error('同步寫入失敗');
+    if (statusEl) statusEl.textContent = `✅ 雲端已同步更新 (${new Date().toLocaleTimeString('zh-TW')})`;
+    if (showNotification) showToast('☁️ 已將最新商品、訂單與留言同步至 GitHub 雲端！');
+  } catch (e) {
+    if (showNotification) showToast('⚠️ 同步至 GitHub 雲端失敗');
+  }
+}
 
+async function syncFromGitHubGist(showNotification = false) {
+  if (!storeSettings.githubToken || !storeSettings.githubGistId) {
+    if (showNotification) showToast('💡 請先於「🌐 GitHub 網站架設 ＆ 雲端同步」分頁設定 GitHub Token 與 Gist ID');
+    return;
+  }
+  try {
+    const res = await fetch(`https://api.github.com/gists/${storeSettings.githubGistId}`, {
+      headers: {
+        'Authorization': `token ${storeSettings.githubToken}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+    if (!res.ok) throw new Error('讀取失敗');
+    const data = await res.json();
+    const fileContent = data.files && data.files['momhandmade_db.json'] && data.files['momhandmade_db.json'].content;
+    if (fileContent) {
+      const parsed = JSON.parse(fileContent);
+      if (parsed.products && parsed.products.length) products = parsed.products;
+      if (Array.isArray(parsed.orders)) {
+        // 合併雲端與本地訂單（避免覆蓋未同步的新訂單）
+        const orderMap = new Map();
+        [...orders, ...parsed.orders].forEach(o => orderMap.set(o.orderNo, o));
+        orders = Array.from(orderMap.values());
+      }
+      if (Array.isArray(parsed.buyerMessages)) {
+        const msgMap = new Map();
+        [...buyerMessages, ...parsed.buyerMessages].forEach(m => msgMap.set(m.id, m));
+        buyerMessages = Array.from(msgMap.values());
+      }
+      saveAllToStorage();
+      renderAll();
+      if (isAdminAuthenticated) renderAdminAll();
+      if (showNotification) showToast('✅ 已從 GitHub 雲端同步最新買家訂單與留言！');
+    }
+  } catch (e) {
+    if (showNotification) showToast('⚠️ 無法從 GitHub 雲端讀取資料，請確認設定是否正確');
+  }
+}
+
+function exportDataJson() {
+  const dataStr = JSON.stringify({ products, orders, buyerMessages, storeSettings }, null, 2);
+  const blob = new Blob([dataStr], { type: 'application/json' });
+  const link = document.createElement('a');
+  link.download = `Momhandmade_備份_${new Date().toISOString().slice(0,10)}.json`;
+  link.href = URL.createObjectURL(blob);
+  link.click();
+}
+
+function importDataJson(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (parsed.products) products = parsed.products;
+      if (parsed.orders) orders = parsed.orders;
+      if (parsed.buyerMessages) buyerMessages = parsed.buyerMessages;
+      if (parsed.storeSettings) storeSettings = Object.assign(storeSettings, parsed.storeSettings);
+      saveAllToStorage();
+      renderAll();
+      renderAdminAll();
+      showToast('✅ 成功匯入商店資料備份！');
+    } catch (err) {
+      showToast('⚠️ 備份檔格式錯誤');
+    }
+  };
+  reader.readAsText(file);
+}
+
+// =========================================================
+// 8. 彈窗與靜態色卡匯出工具
+// =========================================================
 function toggleColorModal(show) {
   document.getElementById('color-modal').classList.toggle('modal-hidden', !show);
 }
@@ -1694,7 +2358,9 @@ function showToast(msg) {
   el.textContent = msg;
   el.classList.remove('modal-hidden');
   if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.add('modal-hidden'), 4200);
+  toastTimer = setTimeout(() => {
+    el.classList.add('modal-hidden');
+  }, 4200);
 }
 
 function initExportGrids() {
@@ -1727,10 +2393,15 @@ async function exportChart(elId, filename) {
   link.click();
 }
 
+// 啟動初始化
 window.addEventListener('DOMContentLoaded', () => {
   initExportGrids();
   selectProduct(products[0].id);
+  if (storeSettings.githubToken && storeSettings.githubGistId) {
+    syncFromGitHubGist(false);
+  }
 });
 </script>
 
-</body></html>
+</body>
+</html>
